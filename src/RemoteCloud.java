@@ -11,4 +11,9 @@ public class RemoteCloud {
 
   } // Constructor
 
+  public void runTask(Task t) {
+
+
+  }
+
 } // RemoteCloud

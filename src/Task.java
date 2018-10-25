@@ -14,7 +14,7 @@ public class Task {
   boolean calculated;       // If the energy use and processing time of the task has been calculated
 
   // Locally (L)
-  boolean compL;      // Task is processed locally
+  boolean compL;            // Task is processed locally
   double energyUseL;        // Energy used for processing locally
   double processTimeL;      // Time to process if processed locally
 
@@ -38,5 +38,11 @@ public class Task {
   public Task() {
     calculated = false;
   } // Constructor
+
+  public void markForLocalComp() {
+    compL = true;
+    compAP = false;
+    compRC = false;
+  }
 
 }
