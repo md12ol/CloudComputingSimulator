@@ -5,13 +5,14 @@
 
 public class AccessPoint {
 
-  boolean computational;    // Whether or not the access point has computation resources
-  double clockFreq;         // The speed of the CPU at the access point
-  int numTasks;             // The number of tasks being processed by the access point
-  double transRate;         // The transmission rate of the access point with the remote cloud
+    // TODO: Determine if this bool is necessary
+//  boolean computational;    // Whether or not the access point has computation resources
+    double clockFreq;         // The speed of the CPU at the access point
+    int numTasks;             // The number of tasks being processed by the access point
+    double transRate;         // The transmission rate of the access point with the remote cloud
 
-  public AccessPoint() {
+    public AccessPoint() {
 
-  }
+    }
 
 }

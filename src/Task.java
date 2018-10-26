@@ -3,7 +3,7 @@
  * tasks which need to be executed as outlined through the paper.
  */
 
-public class Task {
+class Task {
 
   // Variables regardless of location of processing
   private double inputData;         // Input Data Size
@@ -35,21 +35,33 @@ public class Task {
   private double costAP;          // Cost of letting AP process task
   private double costRC;          // Cost of letting RC process task
 
-  public Task(double inputData, double outputData, double cyclesPerByte) {
+  Task(double inputData, double outputData, double cyclesPerByte) {
     this.inputData = inputData;
     this.outputData = outputData;
     this.cyclesPerByte = cyclesPerByte;
     calculated = false;
   } // Constructor
 
-  public void markForLocalComp() {
+  void markL() {
     compL = true;
     compAP = false;
     compRC = false;
   }
 
-  public void markComplete() {
-    // Make sure that this is the end of the
+  void markAP() {
+    compL = false;
+    compAP = true;
+    compRC = false;
+  }
+
+  void markRC() {
+    compL = false;
+    compAP = false;
+    compRC = true;
+  }
+
+  void markComplete() {
+    // Make sure that this is the end of the Task, throw stuff if not
   }
 
 }
