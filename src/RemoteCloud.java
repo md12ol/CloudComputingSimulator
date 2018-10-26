@@ -5,15 +5,15 @@
 
 public class RemoteCloud {
 
-  double clockFreq;         // The speed of the CPU within the remote cloud
+    double clockFreq;         // The speed of the CPU within the remote cloud
 
-  public RemoteCloud() {
+    public RemoteCloud() {
 
-  } // Constructor
+    } // Constructor
 
-  public void runTask(Task t) {
+    public void runTask(Task t) {
 
 
-  }
+    }
 
 } // RemoteCloud

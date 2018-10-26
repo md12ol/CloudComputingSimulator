@@ -10,7 +10,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$USER_HOME$/snap/intellij-idea-community/annotations-16.0.2.jar!/" />
+          <root url="jar://$MODULE_DIR$/annotations-16.0.2.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
