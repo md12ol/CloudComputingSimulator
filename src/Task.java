@@ -176,4 +176,17 @@ class Task {
         compRC = true;
     }
 
+    boolean getCompL() {
+        return compL;
+    }
+
+    boolean getCompAP() {
+        return compAP;
+    }
+
+    boolean getCompRC() {
+        return compRC;
+    }
+
+
 }

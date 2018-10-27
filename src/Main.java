@@ -59,9 +59,11 @@ class Main {
         int m = Integer.valueOf(mode);
 
         // FIXME: Commented out because changes to other classes will immediatly cause errors
-//        localUser = new LocalUser();
-//        accessPoint = new AccessPoint();
-//        remoteCloud = new RemoteCloud();
+        localUser = new LocalUser(accessPoint, tasks);          // Initializing simulated Local User with references to Access Point and Tasks
+        accessPoint = new AccessPoint(localUser, remoteCloud);  // Initializing simulated Access Point with references to Local User and Remote Cloud
+        remoteCloud = new RemoteCloud(accessPoint);             // Initializing simulated Remote Cloud with references to Access Point
+
+        localUser.resolveTasks();   // Start resolving task list
 
         makeTasks();
 
@@ -86,6 +88,12 @@ class Main {
                 runLAC100();
                 break;
         }
+
+        localUser = new LocalUser(accessPoint, tasks);          // Initializing simulated Local User with references to Access Point and Tasks
+        accessPoint = new AccessPoint(localUser, remoteCloud);  // Initializing simulated Access Point with references to Local User and Remote Cloud
+        remoteCloud = new RemoteCloud(accessPoint);             // Initializing simulated Remote Cloud with references to Access Point
+
+        localUser.resolveTasks();   // Start resolving task list
     }
 
     public static void main(@NotNull String[] args) {
