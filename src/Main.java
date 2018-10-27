@@ -29,8 +29,7 @@ class Main {
     private static final double LOCAL_CPU_RATE = 500 * pow(10, 6);                  // Cycles per second
     private static final double LOCAL_COMP_ENERGY_RATE = 1 / (730 * pow(10, 6));    // Jules per cycle
     private static final double LOCAL_TRANS_ENERGY_RATE = 1.42 * pow(10, -7);       // Jules per bit (up and down)
-    private static final double LOCAL_UPLOAD_RATE = 72.2 * pow(10, 6);              // Bits per second
-    private static final double LOCAL_DOWNLOAD_RATE = 72.2 * pow(10, 6);            // Bits per second
+    private static final double LOCAL_TRANS_RATE = 72.2 * pow(10, 6);               // Bits per second
 
     // (Computational) Access Point ((C)AP) Constants
     private static final double CAP_CPU_RATE = 5 * pow(10, 9);                      // Cycles per second
@@ -56,8 +55,17 @@ class Main {
     private AccessPoint accessPoint;                                                // Simulates the access point
     private RemoteCloud remoteCloud;                                                // Simulates the remote cloud
 
-    private Main(String mode) {
+    private Main(String mode) throws CustomException {
         int m = Integer.valueOf(mode);
+
+        // FIXME: Commented out because changes to other classes will immediatly cause errors
+//        localUser = new LocalUser();
+//        accessPoint = new AccessPoint();
+//        remoteCloud = new RemoteCloud();
+
+        makeTasks();
+
+
         switch (m) {
             case 0: // Custom test apparatus NOTE: Default Choice
                 testSuite();
@@ -81,7 +89,12 @@ class Main {
     }
 
     public static void main(@NotNull String[] args) {
-        Main m = new Main(args[0]);
+        try {
+            Main m = new Main(args[0]);
+        } catch (CustomException e) {
+            e.print();
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -115,7 +128,7 @@ class Main {
     /**
      * This method runs a simulation in which each of the tasks are processed locally.
      */
-    private void runLocal() {
+    private void runLocal() throws CustomException {
         for (Task t : tasks) {
             t.markL();
         }
@@ -124,7 +137,7 @@ class Main {
     /**
      * This method runs a simulation in which each of the tasks is processed on the remote cloud.
      */
-    private void runCloud() {
+    private void runCloud() throws CustomException {
         for (Task t : tasks) {
             t.markRC();
         }
@@ -133,7 +146,7 @@ class Main {
     /**
      * This method runs a simulation in which each of the tasks is processed randomly
      */
-    private void runRandom() {
+    private void runRandom() throws CustomException {
         int x, y; // Variables from paper to determine where task is processed
         for (Task t : tasks) {
             x = rand.nextBoolean() ? 1 : 0;
