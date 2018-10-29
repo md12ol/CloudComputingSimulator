@@ -60,19 +60,19 @@ class Main {
     private Main(String mode) throws CustomException {
         int m = Integer.valueOf(mode);
 
-        // FIXME: Commented out because changes to other classes will immediatly cause errors
+        // FIXME: Commented out because changes to other classes will immediately cause errors
         //localUser = new LocalUser(accessPoint, tasks);          // Initializing simulated Local User with references to Access Point and Tasks
         //accessPoint = new AccessPoint(localUser, remoteCloud);  // Initializing simulated Access Point with references to Local User and Remote Cloud
         //remoteCloud = new RemoteCloud(accessPoint);             // Initializing simulated Remote Cloud with references to Access Point
 
         makeTasks(); // Generates NUMBER_OF_TASKS many tasks, stored in "tasks"
-//        m = 2;
+        m = 2;
 
         // FIXME: I don't believe that the tasks are being told where to be processed properly...unless I can't see
         // it cuz I blind
         switch (m) {
             case 0: // Custom test apparatus NOTE: Default Choice
-                testSuite();
+                System.out.println("0");
                 break;
             case 1: // Local
                 runLocal();
