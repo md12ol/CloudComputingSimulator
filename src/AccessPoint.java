@@ -16,20 +16,22 @@ public class AccessPoint {
 
     private double CAP_CPU_RATE;    // Cycles per second
     private double CAP_TRANS_RATE;  // Bits per second
+    private double CAP_PROC_CST;    // Constant related to processing task on CAP
 
-    public AccessPoint(LocalUser lu, RemoteCloud rc, double ccr, double ctr) {
+    public AccessPoint(LocalUser lu, RemoteCloud rc, double ccr, double ctr, double a) {
         // Initializing...
         localUser = lu;
         remoteCloud = rc;
         CAP_CPU_RATE = ccr;
         CAP_TRANS_RATE = ctr;
+        CAP_PROC_CST = a;
     }
 
     public void resolveTask(Task t) throws CustomException {
         // If task can be computed on Access Point...
         if (t.getCompAP()) {
             // Compute on Access Point
-            t.processTask(0, CAP_CPU_RATE);
+            t.processTask(0, CAP_CPU_RATE, CAP_PROC_CST);
         } else {
             // Otherwise, pass task to Remote Cloud
             t.sendToRC(CAP_TRANS_RATE, CAP_TRANS_RATE);

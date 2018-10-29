@@ -27,10 +27,8 @@ class Task {
     private boolean compRC;         // Task is processed on RC
 
     // Costs
-    // TODO: These are difficult to implement in current format, leave for later if necessary
-    private double costL;           // Cost of letting L process task
-    private double costAP;          // Cost of letting AP process task
-    private double costRC;          // Cost of letting RC process task
+    private double costAP;          // Cost of letting AP process task (from paper)
+    private double costRC;          // Cost of letting RC process task (from paper)
 
     /**
      * This constructor creates a task and sets the variables and progress flags to their initial values.
@@ -50,21 +48,30 @@ class Task {
         procTime = 0.0;
         transTime = 0.0;
         transEnergy = 0.0;
+        costAP = inputData;
+        costRC = inputData;
     } // Constructor
 
     /**
      * This method calculates the processing time and energy to process the task.
      *
-     * @param energyRate Rate of Energy Use by CPU
+     * @param energyRate Rate of Energy Use by CPU in Joules per Cycle
      * @param cpuRate    CPU Cycles per Second
+     * @param constant   Calculating the cost of processing on AP and RC are a constant * cost (equivalent to size)
      * @throws CustomException Indicates program error
      */
-    void processTask(double energyRate, double cpuRate) throws CustomException {
+    void processTask(double energyRate, double cpuRate, double constant) throws CustomException {
         if (!marked || !arrived) {
             throw new CustomException("ERROR: Task being processed but not marked and/or not arrived");
         }
-        procEnergy = inputData * cyclesPerBit * energyRate;
-        procTime = inputData * cyclesPerBit * cpuRate;
+        if (compL) {
+            procEnergy = inputData * cyclesPerBit * energyRate;
+        } else if (compAP) {
+            procEnergy = constant * costAP;
+        } else {
+            procEnergy = constant * costRC;
+        }
+        procTime = inputData * cyclesPerBit / cpuRate;
         calculated = true;
     }
 
@@ -87,7 +94,7 @@ class Task {
             arrived = true;
         }
         transEnergy += energyRate * inputData;
-        transTime += upRate * inputData + downRate * outputData;
+        transTime += inputData / upRate + outputData / downRate;
     }
 
     /**
@@ -105,7 +112,7 @@ class Task {
             throw new CustomException("ERROR: Task being sent to RC but not marked and/or already calculated");
         }
         arrived = true;
-        transTime += upRate * inputData + downRate * outputData;
+        transTime += inputData / upRate + outputData / downRate;
     }
 
     /**

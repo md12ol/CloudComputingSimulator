@@ -4,9 +4,6 @@ public class LocalUser {
 
     AccessPoint accessPoint;            // Reference to the Access Point
 
-    double UPLOAD_RATE;                 // The upload capacity of the mobile device (in what unit?)
-    double DOWNLOAD_RATE;               // The download capacity of the mobile device (in what unit?)
-
     private double LOCAL_CPU_RATE;                  // Cycles per second
     private double LOCAL_COMP_ENERGY_RATE;          // Jules per cycle
     private double LOCAL_TRANS_ENERGY_RATE;         // Jules per bit (up and down)
@@ -38,7 +35,7 @@ public class LocalUser {
     public void resolveTasks() throws CustomException {
         for (Task t : tasks) {              // For each task...
             if (t.getCompL()) {             // If task can be computed on Local User...
-                t.processTask(LOCAL_COMP_ENERGY_RATE, LOCAL_CPU_RATE);             // Compute on Local User
+                t.processTask(LOCAL_COMP_ENERGY_RATE, LOCAL_CPU_RATE, 0);             // Compute on Local User
             } else {
                 t.sendToAP(LOCAL_TRANS_ENERGY_RATE, LOCAL_TRANS_RATE, LOCAL_TRANS_RATE);
                 accessPoint.resolveTask(t); // Otherwise, pass task to Access Point

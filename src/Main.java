@@ -66,7 +66,10 @@ class Main {
         //remoteCloud = new RemoteCloud(accessPoint);             // Initializing simulated Remote Cloud with references to Access Point
 
         makeTasks(); // Generates NUMBER_OF_TASKS many tasks, stored in "tasks"
+//        m = 2;
 
+        // FIXME: I don't believe that the tasks are being told where to be processed properly...unless I can't see
+        // it cuz I blind
         switch (m) {
             case 0: // Custom test apparatus NOTE: Default Choice
                 testSuite();
@@ -90,9 +93,9 @@ class Main {
         // Initializing simulated Local User with references to Access Point and Tasks
         localUser = new LocalUser(accessPoint, tasks, LOCAL_CPU_RATE, LOCAL_COMP_ENERGY_RATE, LOCAL_TRANS_ENERGY_RATE, LOCAL_TRANS_RATE);
         // Initializing simulated Access Point with references to Local User and Remote Cloud
-        accessPoint = new AccessPoint(localUser, remoteCloud, CAP_CPU_RATE, CAP_TRANS_RATE);
+        accessPoint = new AccessPoint(localUser, remoteCloud, CAP_CPU_RATE, CAP_TRANS_RATE, ALPHA);
         // Initializing simulated Remote Cloud with references to Access Point
-        remoteCloud = new RemoteCloud(accessPoint, RC_CPU_RATE);
+        remoteCloud = new RemoteCloud(accessPoint, RC_CPU_RATE, BETA);
 
         localUser.loadTasks(tasks);
         // Start resolving task list
@@ -175,9 +178,16 @@ class Main {
     }
 
     private void displayTaskInfo() throws CustomException {
+        double tE = 0.0;
+        double tT = 0.0;
         for (int i = 0; i < tasks.size(); i++) {
             System.out.println("Task A" + i + ":\tTotal Energy: " + f.format(tasks.get(i).totalEnergy()) + "\tTotal Time: " + f.format(tasks.get(i).totalTime()));
+            tE += tasks.get(i).totalEnergy();
+            tT += tasks.get(i).totalTime();
+
         }
+        System.out.println("Total Energy: " + tE + "\tTotal Time: " + tT);
+        System.out.println(tE + tT);
     }
 
     /**
