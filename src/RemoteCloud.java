@@ -9,33 +9,16 @@ public class RemoteCloud {
 
     double clockFreq;               // The speed of the CPU within the remote cloud
 
-    public RemoteCloud(AccessPoint ap) {
+    private double RC_CPU_RATE;     // Cycles per second
+
+    public RemoteCloud(AccessPoint ap, double rcr) {
+        // Initializing...
         accessPoint = ap;
+        RC_CPU_RATE = rcr;
     }
 
-    public void resolveTask(Task t) {   // Compute task
-        if (t.getCompRC()) {            // If task can be computed on Remote Cloud (should always be yes)
-            computeTask(t);             // Compute on Remote Cloud
-            returnTask(t);              // Then return to Access Point
-        }
-    }
-
-    /**
-     * Compute the task on the Access Point.
-     * Math goes here.
-     */
-    public void computeTask(Task t) {
-        // Compute the Task
-    }
-
-    /**
-     * The task has been computed.
-     * Pass the task back to the Access Point.
-     * Handle any cleanup here.
-     */
-    public void returnTask(Task t) {
-        // Send task back (for completion sake)
-        // Do any transfer calculations
-        accessPoint.returnTask(t);
+    public void resolveTask(Task t) throws CustomException {   // Compute task
+        // Compute on Remote Cloud
+        t.processTask(0, RC_CPU_RATE);
     }
 }

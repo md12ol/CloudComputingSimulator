@@ -83,7 +83,9 @@ class Task {
         if (!marked || calculated) {
             throw new CustomException("ERROR: Task being sent to RC but not marked and/or already calculated");
         }
-        arrived = true;
+        if (compAP) {
+            arrived = true;
+        }
         transEnergy += energyRate * inputData;
         transTime += upRate * inputData + downRate * outputData;
     }

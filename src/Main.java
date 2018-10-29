@@ -1,6 +1,7 @@
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -51,6 +52,7 @@ class Main {
     ArrayList<Task> tasks;                                                          // Holds the tasks to be executed
     // Other Variables
     Random rand = new Random(SEED);
+    DecimalFormat f = new DecimalFormat("##.0000");
     private LocalUser localUser;                                                    // Simulates the local user
     private AccessPoint accessPoint;                                                // Simulates the access point
     private RemoteCloud remoteCloud;                                                // Simulates the remote cloud
@@ -59,14 +61,11 @@ class Main {
         int m = Integer.valueOf(mode);
 
         // FIXME: Commented out because changes to other classes will immediatly cause errors
-        localUser = new LocalUser(accessPoint, tasks);          // Initializing simulated Local User with references to Access Point and Tasks
-        accessPoint = new AccessPoint(localUser, remoteCloud);  // Initializing simulated Access Point with references to Local User and Remote Cloud
-        remoteCloud = new RemoteCloud(accessPoint);             // Initializing simulated Remote Cloud with references to Access Point
+        //localUser = new LocalUser(accessPoint, tasks);          // Initializing simulated Local User with references to Access Point and Tasks
+        //accessPoint = new AccessPoint(localUser, remoteCloud);  // Initializing simulated Access Point with references to Local User and Remote Cloud
+        //remoteCloud = new RemoteCloud(accessPoint);             // Initializing simulated Remote Cloud with references to Access Point
 
-        localUser.resolveTasks();   // Start resolving task list
-
-        makeTasks();
-
+        makeTasks(); // Generates NUMBER_OF_TASKS many tasks, stored in "tasks"
 
         switch (m) {
             case 0: // Custom test apparatus NOTE: Default Choice
@@ -88,17 +87,23 @@ class Main {
                 runLAC100();
                 break;
         }
+        // Initializing simulated Local User with references to Access Point and Tasks
+        localUser = new LocalUser(accessPoint, tasks, LOCAL_CPU_RATE, LOCAL_COMP_ENERGY_RATE, LOCAL_TRANS_ENERGY_RATE, LOCAL_TRANS_RATE);
+        // Initializing simulated Access Point with references to Local User and Remote Cloud
+        accessPoint = new AccessPoint(localUser, remoteCloud, CAP_CPU_RATE, CAP_TRANS_RATE);
+        // Initializing simulated Remote Cloud with references to Access Point
+        remoteCloud = new RemoteCloud(accessPoint, RC_CPU_RATE);
 
-        localUser = new LocalUser(accessPoint, tasks);          // Initializing simulated Local User with references to Access Point and Tasks
-        accessPoint = new AccessPoint(localUser, remoteCloud);  // Initializing simulated Access Point with references to Local User and Remote Cloud
-        remoteCloud = new RemoteCloud(accessPoint);             // Initializing simulated Remote Cloud with references to Access Point
-
-        localUser.resolveTasks();   // Start resolving task list
+        localUser.loadTasks(tasks);
+        // Start resolving task list
+        localUser.resolveTasks();
+        displayTaskInfo();
     }
 
     public static void main(@NotNull String[] args) {
         try {
-            Main m = new Main(args[0]);
+            //Main m = new Main(args[0]);
+            Main m = new Main("1");
         } catch (CustomException e) {
             e.print();
             e.printStackTrace();
@@ -166,6 +171,12 @@ class Main {
             } else {                // Remote cloud
                 t.markRC();
             }
+        }
+    }
+
+    private void displayTaskInfo() throws CustomException {
+        for (int i = 0; i < tasks.size(); i++) {
+            System.out.println("Task A" + i + ":\tTotal Energy: " + f.format(tasks.get(i).totalEnergy()) + "\tTotal Time: " + f.format(tasks.get(i).totalTime()));
         }
     }
 
