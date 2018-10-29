@@ -3,8 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="edf0dc1b-7189-4249-be86-c09dbaf7335d" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/LocalUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/LocalUser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Task.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Task.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -91,13 +91,13 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="java" value="5030" />
+          <entry key="java" value="5425" />
           <entry key="txt" value="224" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="JAVA" value="5030" />
+          <entry key="JAVA" value="5425" />
           <entry key="PLAIN_TEXT" value="224" />
         </counts>
       </usages-collector>
@@ -118,8 +118,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="244">
-              <caret line="93" column="45" lean-forward="true" selection-start-line="93" selection-start-column="34" selection-end-line="93" selection-end-column="45" />
+            <state relative-caret-position="784">
+              <caret line="103" column="35" lean-forward="true" selection-start-line="103" selection-start-column="35" selection-end-line="103" selection-end-column="35" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#5829#5830#0" expanded="true" />
@@ -132,8 +132,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Task.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="240">
-              <caret line="97" column="5" lean-forward="true" selection-start-line="85" selection-start-column="4" selection-end-line="97" selection-end-column="5" />
+            <state relative-caret-position="-1335">
+              <caret line="34" selection-start-line="34" selection-end-line="34" />
               <folding>
                 <element signature="e#6706#6707#0" expanded="true" />
                 <element signature="e#6734#6735#0" expanded="true" />
@@ -150,7 +150,7 @@
         <entry file="file://$PROJECT_DIR$/src/CustomException.java">
           <provider selected="true" editor-type-id="text-editor">
             <state>
-              <caret column="1" lean-forward="true" selection-start-column="1" selection-end-column="1" />
+              <caret column="41" lean-forward="true" selection-start-column="41" selection-end-column="41" />
               <folding>
                 <element signature="e#155#156#0" expanded="true" />
                 <element signature="e#198#199#0" expanded="true" />
@@ -159,11 +159,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/LocalUser.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="500">
-              <caret line="40" column="77" selection-start-line="40" selection-start-column="77" selection-end-line="40" selection-end-column="77" />
+            <state relative-caret-position="120">
+              <caret line="8" column="40" lean-forward="true" selection-start-line="8" selection-start-column="40" selection-end-line="8" selection-end-column="40" />
               <folding>
                 <element signature="e#1065#1066#0" expanded="true" />
                 <element signature="e#1090#1091#0" expanded="true" />
@@ -175,17 +175,17 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/AccessPoint.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="350">
-              <caret line="33" column="57" lean-forward="true" selection-start-line="33" selection-start-column="12" selection-end-line="33" selection-end-column="57" />
+            <state relative-caret-position="420">
+              <caret line="28" lean-forward="true" selection-start-line="28" selection-end-line="28" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/RemoteCloud.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="390">
-              <caret line="26" lean-forward="true" selection-start-line="26" selection-end-line="26" />
+            <state relative-caret-position="150">
+              <caret line="10" lean-forward="true" selection-start-line="10" selection-end-line="10" />
             </state>
           </provider>
         </entry>
@@ -218,9 +218,9 @@
         <option value="$PROJECT_DIR$/src/CustomException.java" />
         <option value="$PROJECT_DIR$/src/AccessPoint.java" />
         <option value="$PROJECT_DIR$/src/RemoteCloud.java" />
+        <option value="$PROJECT_DIR$/src/LocalUser.java" />
         <option value="$PROJECT_DIR$/src/Task.java" />
         <option value="$PROJECT_DIR$/src/Main.java" />
-        <option value="$PROJECT_DIR$/src/LocalUser.java" />
       </list>
     </option>
   </component>
@@ -270,7 +270,7 @@
     <property name="Repository.Attach.Sources" value="false" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1540848891523" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1540849495452" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
@@ -354,13 +354,20 @@
       <option name="project" value="LOCAL" />
       <updated>1540827211993</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Made some changes to math and some constants. This includes adding to the constructors/processTask methods.&#10;&#10;Added a FIXME">
+      <created>1540848911880</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1540848911880</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
     <option name="totallyTimeSpent" value="4832000" />
   </component>
-  <component name="TodoView">
+  <component name="TodoView" selected-index="4">
     <todo-panel id="selected-file">
       <is-autoscroll-to-source value="true" />
     </todo-panel>
@@ -390,11 +397,11 @@
       <window_info anchor="bottom" id="Version Control" order="5" weight="0.32821077" />
       <window_info anchor="bottom" id="Message" order="6" />
       <window_info anchor="bottom" id="Find" order="7" weight="0.32896176" />
-      <window_info active="true" anchor="bottom" id="Run" order="8" sideWeight="0.4989011" visible="true" weight="0.32821077" />
+      <window_info anchor="bottom" id="Run" order="8" sideWeight="0.4989011" weight="0.32821077" />
       <window_info anchor="bottom" id="Debug" order="9" sideWeight="0.4989011" weight="0.39956093" />
       <window_info anchor="bottom" id="Cvs" order="10" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="11" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="12" weight="0.32968238" />
+      <window_info active="true" anchor="bottom" id="TODO" order="12" visible="true" weight="0.32930845" />
       <window_info anchor="right" id="Palette" order="0" />
       <window_info anchor="right" id="Capture Analysis" order="1" />
       <window_info anchor="right" id="Maven Projects" order="2" />
@@ -458,35 +465,22 @@
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/src/Local.java" />
-    <entry file="file://$PROJECT_DIR$/src/RemoteCloud.java">
+    <entry file="file://$PROJECT_DIR$/src/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="26" lean-forward="true" selection-start-line="26" selection-end-line="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/AccessPoint.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="350">
-          <caret line="33" column="57" lean-forward="true" selection-start-line="33" selection-start-column="12" selection-end-line="33" selection-end-column="57" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/CustomException.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="1" lean-forward="true" selection-start-column="1" selection-end-column="1" />
+        <state relative-caret-position="784">
+          <caret line="103" column="35" lean-forward="true" selection-start-line="103" selection-start-column="35" selection-end-line="103" selection-end-column="35" />
           <folding>
-            <element signature="e#155#156#0" expanded="true" />
-            <element signature="e#198#199#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+            <element signature="e#5829#5830#0" expanded="true" />
+            <element signature="e#5873#5874#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Task.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="97" column="5" lean-forward="true" selection-start-line="85" selection-start-column="4" selection-end-line="97" selection-end-column="5" />
+        <state relative-caret-position="-1335">
+          <caret line="34" selection-start-line="34" selection-end-line="34" />
           <folding>
             <element signature="e#6706#6707#0" expanded="true" />
             <element signature="e#6734#6735#0" expanded="true" />
@@ -498,26 +492,39 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Main.java">
+    <entry file="file://$PROJECT_DIR$/src/CustomException.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="244">
-          <caret line="93" column="45" lean-forward="true" selection-start-line="93" selection-start-column="34" selection-end-line="93" selection-end-column="45" />
+        <state>
+          <caret column="41" lean-forward="true" selection-start-column="41" selection-end-column="41" />
           <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#5829#5830#0" expanded="true" />
-            <element signature="e#5873#5874#0" expanded="true" />
+            <element signature="e#155#156#0" expanded="true" />
+            <element signature="e#198#199#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/LocalUser.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="500">
-          <caret line="40" column="77" selection-start-line="40" selection-start-column="77" selection-end-line="40" selection-end-column="77" />
+        <state relative-caret-position="120">
+          <caret line="8" column="40" lean-forward="true" selection-start-line="8" selection-start-column="40" selection-end-line="8" selection-end-column="40" />
           <folding>
             <element signature="e#1065#1066#0" expanded="true" />
             <element signature="e#1090#1091#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/AccessPoint.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="420">
+          <caret line="28" lean-forward="true" selection-start-line="28" selection-end-line="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/RemoteCloud.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="10" lean-forward="true" selection-start-line="10" selection-end-line="10" />
         </state>
       </provider>
     </entry>

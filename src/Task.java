@@ -30,6 +30,9 @@ class Task {
     private double costAP;          // Cost of letting AP process task (from paper)
     private double costRC;          // Cost of letting RC process task (from paper)
 
+    // TODO: Michael add in cost of time of computation at L, AP, RC and change the eqaution to calculate max of the
+    // three
+
     /**
      * This constructor creates a task and sets the variables and progress flags to their initial values.
      *

@@ -79,9 +79,11 @@ class Main {
                 break;
             case 2: // Remote Cloud
                 runCloud();
+                // FIXME: Tyler why does this crash?
                 break;
             case 3: // Random
                 runRandom();
+                // TODO: Check if this works
                 break;
             case 4: // LC 100
                 runLC100();
@@ -90,6 +92,8 @@ class Main {
                 runLAC100();
                 break;
         }
+        // TODO: Tyler Make sure it works from command line
+        // TODO: Tyler Implement user choice
         // Initializing simulated Local User with references to Access Point and Tasks
         localUser = new LocalUser(accessPoint, tasks, LOCAL_CPU_RATE, LOCAL_COMP_ENERGY_RATE, LOCAL_TRANS_ENERGY_RATE, LOCAL_TRANS_RATE);
         // Initializing simulated Access Point with references to Local User and Remote Cloud
@@ -108,6 +112,7 @@ class Main {
             //Main m = new Main(args[0]);
             Main m = new Main("1");
         } catch (CustomException e) {
+            // TODO: Michael add exceptions for other classes if needed
             e.print();
             e.printStackTrace();
         }
