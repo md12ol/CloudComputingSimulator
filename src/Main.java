@@ -1,9 +1,9 @@
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Scanner;
 
 import static java.lang.Math.pow;
 
@@ -57,60 +57,57 @@ class Main {
     private AccessPoint accessPoint;                                                // Simulates the access point
     private RemoteCloud remoteCloud;                                                // Simulates the remote cloud
 
-    private Main(String mode) throws CustomException {
-        int m = Integer.valueOf(mode);
-
-        // FIXME: Commented out because changes to other classes will immediately cause errors
-        //localUser = new LocalUser(accessPoint, tasks);          // Initializing simulated Local User with references to Access Point and Tasks
-        //accessPoint = new AccessPoint(localUser, remoteCloud);  // Initializing simulated Access Point with references to Local User and Remote Cloud
-        //remoteCloud = new RemoteCloud(accessPoint);             // Initializing simulated Remote Cloud with references to Access Point
-
-        makeTasks(); // Generates NUMBER_OF_TASKS many tasks, stored in "tasks"
-        m = 2;
-
-        // FIXME: I don't believe that the tasks are being told where to be processed properly...unless I can't see
-        // it cuz I blind
-        switch (m) {
-            case 0: // Custom test apparatus NOTE: Default Choice
-                System.out.println("0");
+    private Main() throws CustomException {
+        // Initializing simulated Remote Cloud
+        remoteCloud = new RemoteCloud(RC_CPU_RATE, BETA);
+        // Initializing simulated Access Point
+        accessPoint = new AccessPoint(remoteCloud, CAP_CPU_RATE, CAP_TRANS_RATE, ALPHA);
+        // Initializing simulated Local User
+        localUser = new LocalUser(accessPoint, tasks, LOCAL_CPU_RATE, LOCAL_COMP_ENERGY_RATE, LOCAL_TRANS_ENERGY_RATE, LOCAL_TRANS_RATE);
+        // Generates NUMBER_OF_TASKS many tasks
+        makeTasks();
+        switch (promptUser()) {
+            default: // Custom test apparatus NOTE: Default Choice
+                System.out.println("* * * CUSTOM TEST SUITE * * *");
+                testSuite();
                 break;
-            case 1: // Local
-                runLocal();
+            case '1': // Local User
+                System.out.println("* * * LOCAL USER * * *");
+                markForLU();
+                simpleTest();
                 break;
-            case 2: // Remote Cloud
-                runCloud();
-                // FIXME: Tyler why does this crash?
+            case '2': // Access Point
+                System.out.println("* * * ACCESS POINT * * *");
+                markForAP();
+                simpleTest();
                 break;
-            case 3: // Random
-                runRandom();
-                // TODO: Check if this works
+            case '3': // Remote Cloud
+                System.out.println("* * * REMOTE CLOUD * * *");
+                markForRC();
+                simpleTest();
                 break;
-            case 4: // LC 100
-                runLC100();
+            case '4': // Random
+                System.out.println("* * * RANDOM * * *");
+                markForRandom();
+                simpleTest();
                 break;
-            case 5: // LAC 100
-                runLAC100();
+            case '5': // LC 100
+                System.out.println("* * * NOT YET IMPLEMENTED * * *");
+                markForLC100();
+                simpleTest();
+                break;
+            case '6': // LAC 100
+                System.out.println("* * * NOT YET IMPLEMENTED * * *");
+                markForLAC100();
+                simpleTest();
                 break;
         }
-        // TODO: Tyler Make sure it works from command line
-        // TODO: Tyler Implement user choice
-        // Initializing simulated Local User with references to Access Point and Tasks
-        localUser = new LocalUser(accessPoint, tasks, LOCAL_CPU_RATE, LOCAL_COMP_ENERGY_RATE, LOCAL_TRANS_ENERGY_RATE, LOCAL_TRANS_RATE);
-        // Initializing simulated Access Point with references to Local User and Remote Cloud
-        accessPoint = new AccessPoint(localUser, remoteCloud, CAP_CPU_RATE, CAP_TRANS_RATE, ALPHA);
-        // Initializing simulated Remote Cloud with references to Access Point
-        remoteCloud = new RemoteCloud(accessPoint, RC_CPU_RATE, BETA);
 
-        localUser.loadTasks(tasks);
-        // Start resolving task list
-        localUser.resolveTasks();
-        displayTaskInfo();
     }
 
-    public static void main(@NotNull String[] args) {
+    public static void main(String[] args) {
         try {
-            //Main m = new Main(args[0]);
-            Main m = new Main("1");
+            Main m = new Main();
         } catch (CustomException e) {
             // TODO: Michael add exceptions for other classes if needed
             e.print();
@@ -122,8 +119,44 @@ class Main {
      * This method is for the creation of custom and more elaborate tests.  This can include averaging multiple runs
      * or testing various offloading strategies without running the program multiple times.
      */
-    private void testSuite() {
-        System.out.println("Works!");
+    private void testSuite() throws CustomException {
+        double averageCombinedTotal = 0;
+        double averageTotalEnergy = 0;
+        double averageTotalTime = 0;
+        System.out.println("* * * LOCAL USER * * *");
+        markForLU();
+        for (int i = 0; i < 30; i++) {
+            simpleTest();
+            double tE = 0.0;
+            double tT = 0.0;
+            for (int j = 0; j < tasks.size(); j++) {
+                tE += tasks.get(j).totalEnergy();
+                tT += tasks.get(j).totalTime();
+            }
+            averageCombinedTotal += (tE + tT);
+            averageTotalEnergy += tE;
+            averageTotalTime += tT;
+        }
+        System.out.println();
+
+
+        resetTasks();
+        System.out.println("* * * ACCESS POINT * * *");
+        markForAP();
+        simpleTest();
+        resetTasks();
+        System.out.println("* * * REMOTE CLOUD * * *");
+        markForRC();
+        simpleTest();
+        resetTasks();
+        System.out.println("* * * RANDOM * * *");
+        markForRandom();
+        simpleTest();
+    }
+
+    private void simpleTest() throws CustomException {
+        localUser.resolveTasks();
+        displayTaskInfo();
     }
 
     /**
@@ -144,12 +177,14 @@ class Main {
             out = rand.nextDouble() * outRange + MIN_OUTPUT_SIZE;
             tasks.add(new Task(in, out, APP_CYCLES_PER_BIT));
         }
+        // Load list of tasks into the Local User
+        localUser.loadTasks(tasks);
     }
 
     /**
      * This method runs a simulation in which each of the tasks are processed locally.
      */
-    private void runLocal() throws CustomException {
+    private void markForLU() throws CustomException {
         for (Task t : tasks) {
             t.markL();
         }
@@ -158,7 +193,16 @@ class Main {
     /**
      * This method runs a simulation in which each of the tasks is processed on the remote cloud.
      */
-    private void runCloud() throws CustomException {
+    private void markForAP() throws CustomException {
+        for (Task t : tasks) {
+            t.markAP();
+        }
+    }
+
+    /**
+     * This method runs a simulation in which each of the tasks is processed on the remote cloud.
+     */
+    private void markForRC() throws CustomException {
         for (Task t : tasks) {
             t.markRC();
         }
@@ -167,7 +211,7 @@ class Main {
     /**
      * This method runs a simulation in which each of the tasks is processed randomly
      */
-    private void runRandom() throws CustomException {
+    private void markForRandom() throws CustomException {
         int x, y; // Variables from paper to determine where task is processed
         for (Task t : tasks) {
             x = rand.nextBoolean() ? 1 : 0;
@@ -186,20 +230,39 @@ class Main {
         double tE = 0.0;
         double tT = 0.0;
         for (int i = 0; i < tasks.size(); i++) {
-            System.out.println("Task A" + i + ":\tTotal Energy: " + f.format(tasks.get(i).totalEnergy()) + "\tTotal Time: " + f.format(tasks.get(i).totalTime()));
+            System.out.println("Task " + i + ":\tTotal Energy: " + f.format(tasks.get(i).totalEnergy()) + "\tTotal Time: " + f.format(tasks.get(i).totalTime()));
             tE += tasks.get(i).totalEnergy();
             tT += tasks.get(i).totalTime();
 
         }
-        System.out.println("Total Energy: " + tE + "\tTotal Time: " + tT);
-        System.out.println(tE + tT);
+        System.out.println("ALL:\tTotal Energy: " + f.format(tE) + "\tTotal Time: " + f.format(tT));
+        System.out.println(f.format((tE + tT)));
+    }
+
+    private char promptUser() {
+        Scanner s = new Scanner(System.in);
+        System.out.println("Please choose a testing mode:");
+        System.out.println("\t[0] Custom:\t\t\tConsecutively runs [1], [2], [3], and [4]. (DEFAULT).");
+        System.out.println("\t[1] Local User:\t\tAll tasks will be processed on the Local User.");
+        System.out.println("\t[2] Access Point:\tAll tasks will be processed on the Access Point.");
+        System.out.println("\t[3] Remote Cloud:\tAll tasks will be processed on the Remote Cloud.");
+        System.out.println("\t[4] Random:\t\t\tEach task is randomly assigned to LU, AP, or RC.");
+        System.out.println("\t[5] LC 100:\t\t\tProposed method from paper. Not yet implemented.");
+        System.out.println("\t[6] LAC 100:\t\tProposed method from paper. Not yet implemented.");
+        return s.next().charAt(0);
+    }
+
+    private void resetTasks() {
+        for (Task t : tasks) {
+            t.reset();
+        }
     }
 
     /**
      * This method runs a simulation using the LC100 method described in the paper
      */
     @Contract(" -> fail")
-    private void runLC100() {
+    private void markForLC100() {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
@@ -207,7 +270,7 @@ class Main {
      * This method runs a simulation using the LAC100 method described in the paper
      */
     @Contract(" -> fail")
-    private void runLAC100() {
+    private void markForLAC100() {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 }

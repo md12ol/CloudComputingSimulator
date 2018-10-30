@@ -196,8 +196,15 @@ class Task {
         return compAP;
     }
 
-    boolean getCompRC() {
-        return compRC;
+    void reset() {
+        arrived = false;
+        calculated = false;
+        procEnergy = 0.0;
+        procTime = 0.0;
+        transTime = 0.0;
+        transEnergy = 0.0;
+        costAP = inputData;
+        costRC = inputData;
     }
 
 

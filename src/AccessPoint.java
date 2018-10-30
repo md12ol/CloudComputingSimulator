@@ -5,22 +5,13 @@
 
 public class AccessPoint {
 
-    LocalUser localUser;            // Reference to the Local User
     RemoteCloud remoteCloud;        // Reference to the Remote Cloud
-
-    // TODO: Determine if this bool is necessary
-    //  boolean computational;      // Whether or not the access point has computation resources
-    double clockFreq;               // The speed of the CPU at the access point
-    int numTasks;                   // The number of tasks being processed by the access point
-    double TRANS_RATE;              // The transmission rate of the access point with the remote cloud
-
-    private double CAP_CPU_RATE;    // Cycles per second
+    public double CAP_CPU_RATE;     // Cycles per second
     private double CAP_TRANS_RATE;  // Bits per second
     private double CAP_PROC_CST;    // Constant related to processing task on CAP
 
-    public AccessPoint(LocalUser lu, RemoteCloud rc, double ccr, double ctr, double a) {
+    public AccessPoint(RemoteCloud rc, double ccr, double ctr, double a) {
         // Initializing...
-        localUser = lu;
         remoteCloud = rc;
         CAP_CPU_RATE = ccr;
         CAP_TRANS_RATE = ctr;

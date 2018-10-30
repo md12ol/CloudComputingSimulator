@@ -3,12 +3,10 @@ import java.util.ArrayList;
 public class LocalUser {
 
     AccessPoint accessPoint;            // Reference to the Access Point
-
     private double LOCAL_CPU_RATE;                  // Cycles per second
     private double LOCAL_COMP_ENERGY_RATE;          // Jules per cycle
     private double LOCAL_TRANS_ENERGY_RATE;         // Jules per bit (up and down)
     private double LOCAL_TRANS_RATE;
-
     ArrayList<Task> tasks;
 
     public LocalUser(AccessPoint ap, ArrayList<Task> t, double lcr, double lcer, double lter, double ltr) {
