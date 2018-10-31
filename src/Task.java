@@ -184,8 +184,8 @@ class Task {
      * This method resets all the tasks so that they can be re-used to test another offloading method.
      */
     void reset() {
-        marked = true; // Unchanged location of processing
-        arrived = compL;
+        marked = true; // Unchanged location of processing when resetting
+        arrived = false;
         calculated = false;
         procEnergy = 0.0;
         procTime = 0.0;

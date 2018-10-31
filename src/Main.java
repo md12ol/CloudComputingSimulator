@@ -22,6 +22,11 @@ import static java.lang.Math.pow;
  * point, which can process tasks from the mobile device, has better performance than a cloud computing system with
  * only the remote cloud for execution.  A proposed algorithm to determine where different tasks should be processed
  * will be implemented and tested against various task offloading heuristics.
+ * To Run:
+ * 1 - Navigate to MCCProject/src
+ * 2 - Run "javac *.java"
+ * 3 - Run "java Main"
+ * 4 - Follow command line instructions
  */
 
 class Main {
