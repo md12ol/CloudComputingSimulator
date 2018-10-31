@@ -23,9 +23,9 @@ import static java.lang.Math.pow;
  * only the remote cloud for execution.  A proposed algorithm to determine where different tasks should be processed
  * will be implemented and tested against various task offloading heuristics.
  * To Run:
- * 1 - Navigate to MCCProject/src
- * 2 - Run "javac *.java"
- * 3 - Run "java Main"
+ * 1 - Navigate to MCCProject/src in a Bash terminal
+ * 2 - Execute "javac *.java" in the terminal
+ * 3 - Execute "java Main" in the terminal
  * 4 - Follow command line instructions
  */
 
@@ -134,7 +134,7 @@ class Main {
      */
     public static void main(String[] args) {
         try {
-            Main m = new Main();
+            new Main();
         } catch (CustomException e) { // Catch any custom exceptions to return error message causing exception
             e.print();
             e.printStackTrace();
@@ -355,12 +355,6 @@ class Main {
      * Remote Cloud, 4) Random, 5) LC100, 6) LAC100, and 7) Random Mapping 100
      *
      * @param test the associated numerical index of the appropriate markForX method.
-     */
-
-    /**
-     * @param test
-     * @throws CustomException
-     * @throws UnsupportedOperationException
      */
     private void markAll(int test) throws CustomException, UnsupportedOperationException {
         switch (test) {
