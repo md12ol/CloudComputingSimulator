@@ -249,12 +249,10 @@ class Main {
         for (int test = 0; test < NUMBER_OF_UNIQUE_METHODS; test++) {
             try {
                 for (int run = 0; run < runs; run++) {
-    
                     loadTasks(local);                   // Load new tasks
                     markAll(test);                      // Mark for proper execution
                     local.resolveTasks();               // Resolve tasks
                     results.get(test).add(calcCost());  // Append to results
-    
                 }
             } catch (UnsupportedOperationException e) {
                 System.out.println("NOTE: Test " + test + " not run as not yet implemented");
@@ -357,6 +355,12 @@ class Main {
      * Remote Cloud, 4) Random, 5) LC100, 6) LAC100, and 7) Random Mapping 100
      *
      * @param test the associated numerical index of the appropriate markForX method.
+     */
+
+    /**
+     * @param test
+     * @throws CustomException
+     * @throws UnsupportedOperationException
      */
     private void markAll(int test) throws CustomException, UnsupportedOperationException {
         switch (test) {
