@@ -73,7 +73,7 @@ class Main {
         
         remoteCloud = new RemoteCloud(RC_CPU_RATE, BETA);
         accessPoint = new AccessPoint(remoteCloud, CAP_CPU_RATE, CAP_TRANS_RATE, ALPHA);
-        localUser = new LocalUser(accessPoint, null, LOCAL_CPU_RATE, LOCAL_COMP_ENERGY_RATE, LOCAL_TRANS_ENERGY_RATE
+        localUser = new LocalUser(accessPoint, LOCAL_CPU_RATE, LOCAL_COMP_ENERGY_RATE, LOCAL_TRANS_ENERGY_RATE
                 , LOCAL_TRANS_RATE);
     
         loadTasks(localUser); // Tasks are loaded into localUser
@@ -244,12 +244,12 @@ class Main {
         for (int test = 0; test < NUMBER_OF_UNIQUE_METHODS; test++) {
             try {
                 for (int run = 0; run < runs; run++) {
-                
+    
                     loadTasks(local);                   // Load new tasks
                     markAll(test);                      // Mark for proper execution
                     local.resolveTasks();               // Resolve tasks
                     results.get(test).add(calcCost());  // Append to results
-                
+    
                 }
             } catch (UnsupportedOperationException e) {
                 System.out.println("NOTE: Test " + test + " not run as not yet implemented");
