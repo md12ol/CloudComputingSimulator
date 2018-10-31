@@ -1,10 +1,10 @@
 /**
- * This class is meant to abstract the data and procedural components which relate to individual
- * tasks which need to be executed as outlined through the paper.
+ * This class is meant to abstract the data and procedural components which relate to individual tasks which need to
+ * be executed as outlined through the paper.
  */
 
 class Task {
-
+    
     // Variables regardless of location of processing
     private double inputData;         // Bits - Input Data Size
     private double outputData;        // Bits - Output Data Size
@@ -16,23 +16,16 @@ class Task {
     private double procTime;            // Time to process task
     private double transEnergy;         // Energy from phone used to transmit task
     private double transTime;           // Time to transmit task
-
+    
     // Locally (L)
     private boolean compL;            // Task is processed locally
-
+    
     // Access Point (AP)
     private boolean compAP;          // Task is processed on CAP
-
+    
     // Remote Cloud (RC)
     private boolean compRC;         // Task is processed on RC
-
-    // Costs
-    private double costAP;          // Cost of letting AP process task (from paper)
-    private double costRC;          // Cost of letting RC process task (from paper)
-
-    // TODO: Michael add in cost of time of computation at L, AP, RC and change the eqaution to calculate max of the
-    // three
-
+    
     /**
      * This constructor creates a task and sets the variables and progress flags to their initial values.
      *
@@ -51,10 +44,8 @@ class Task {
         procTime = 0.0;
         transTime = 0.0;
         transEnergy = 0.0;
-        costAP = inputData;
-        costRC = inputData;
     } // Constructor
-
+    
     /**
      * This method calculates the processing time and energy to process the task.
      *
@@ -64,20 +55,21 @@ class Task {
      * @throws CustomException Indicates program error
      */
     void processTask(double energyRate, double cpuRate, double constant) throws CustomException {
-        if (!marked || !arrived) {
+        if (!marked || !arrived) { // Task not marked for processing and hasn't arrived to processing location
             throw new CustomException("ERROR: Task being processed but not marked and/or not arrived");
         }
-        if (compL) {
+        if (compL) { // Local
             procEnergy = inputData * cyclesPerBit * energyRate;
-        } else if (compAP) {
-            procEnergy = constant * costAP;
-        } else {
-            procEnergy = constant * costRC;
+        } else if (compAP) { // AP
+            procEnergy = constant * inputData;
+        } else { // RC
+            procEnergy = constant * inputData;
         }
         procTime = inputData * cyclesPerBit / cpuRate;
         calculated = true;
-    }
-
+    } // processTask
+    
+    
     /**
      * This method adds the transmission time and energy to and from the access point to the accumulated transmission
      * time and energy.
@@ -96,10 +88,10 @@ class Task {
         if (compAP) {
             arrived = true;
         }
-        transEnergy += energyRate * inputData;
         transTime += inputData / upRate + outputData / downRate;
-    }
-
+        transEnergy += energyRate * inputData;
+    } // sendToAP
+    
     /**
      * This method adds the transmission time to and from the remote cloud to the accumulated transmission time.
      *
@@ -116,8 +108,8 @@ class Task {
         }
         arrived = true;
         transTime += inputData / upRate + outputData / downRate;
-    }
-
+    } // sendToRC
+    
     /**
      * @return total energy used to transmit and process the task
      * @throws CustomException Indicates program error
@@ -127,8 +119,8 @@ class Task {
             throw new CustomException("ERROR: Attempt to calculate energy before calculated");
         }
         return transEnergy + procEnergy;
-    }
-
+    } // totalEnergy
+    
     /**
      * @return total time used to transmit and process the task
      * @throws CustomException Indicates program error
@@ -138,8 +130,8 @@ class Task {
             throw new CustomException("ERROR: Attempt to calculate time before calculated");
         }
         return transTime + procTime;
-    }
-
+    } // totalTime
+    
     /**
      * This method marks a task to be processed locally
      *
@@ -155,7 +147,7 @@ class Task {
         compAP = false;
         compRC = false;
     }
-
+    
     /**
      * This method marks a task to be processed at the access point
      *
@@ -171,7 +163,7 @@ class Task {
         compAP = true;
         compRC = false;
     }
-
+    
     /**
      * This method marks a task to be processed on the remote cloud
      *
@@ -187,25 +179,27 @@ class Task {
         compAP = false;
         compRC = true;
     }
-
-    boolean getCompL() {
-        return compL;
-    }
-
-    boolean getCompAP() {
-        return compAP;
-    }
-
+    
+    /**
+     * This method resets all the tasks so that they can be re-used to test another offloading method.
+     */
     void reset() {
-        arrived = false;
+        marked = true; // Unchanged location of processing
+        arrived = compL;
         calculated = false;
         procEnergy = 0.0;
         procTime = 0.0;
         transTime = 0.0;
         transEnergy = 0.0;
-        costAP = inputData;
-        costRC = inputData;
     }
-
-
+    
+    // Getters
+    boolean getCompL() {
+        return compL;
+    }
+    
+    boolean getCompAP() {
+        return compAP;
+    }
+    
 }
