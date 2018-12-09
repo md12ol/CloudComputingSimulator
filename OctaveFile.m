@@ -1,5 +1,6 @@
 ### Constants ###
 # These are all the constants from the paper
+
 global numTasks;      # (N) Number of tasks
 global constA;         # Weight of transmission energy
 global constB;          # Weight of processing cost
@@ -40,6 +41,7 @@ minOutput = 1 * 8 * power(10,6);
 
 ### Scenario setup ###
 # Rendomly assign input and output sizes for the tasks
+
 dataIn = (rand(1,numTasks) .* (maxInput - minInput)) .+ minInput;
 dataOut = (rand(1,numTasks) .* (maxOutput - minOutput)) .+ minOutput;
 disp("Input Data Vector");
@@ -53,6 +55,7 @@ y = []; # y vector from paper
 
 ### Procedure ###
 # This is the code that implements SeDuMi
+
 G0 = reshape(gNot(), 1, []);
 Gl = reshape(gSubL(), 1, []);
 Ga = reshape(gSubA(), 1, []);
@@ -71,13 +74,42 @@ A = A';
 c = G0;
 temp = zeros(1, numTasks * 4);
 b = [(-tSubL()' * matrixOne()), 0, 0, temp]';
-[xOut, yOut, infoOut] = sedumi(A, b, c)
+[xOut, yOut, infoOut] = sedumi(A, b, c);
 
 ### Transform SeDuMi Output ###
 # This is the code to convert output to useful data
-#XPRIME = reshape(xOut, [])
+# All capped variables are from algorithm in the paper
 
-### Functions ###
+N = numTasks;
+L = 100;
+X = reshape(xOut, [columns(gNot()),rows(gNot())]);
+X_PRIME = X(1:(2*N), 1:(2*N));
+printToFile(X_PRIME, "X_PRIME Matrix.txt");
+
+u = []';
+
+### Helper Functions ###
+# These functions are for output and for implementing algorithm from paper
+
+# Output matrix to file
+function printToFile(matrix, fileName)
+  outFile = fopen(fileName, "w");
+  outFormat = rptStr("%f\t", rows(matrix));
+  fprintf(outFile,outFormat, matrix);
+  fclose(outFile);
+endfunction
+
+# Repeats the string str the number of times provided, appends newline at end
+function rtn = rptStr(str, times)
+  rtn = "";
+  for i = 1:times
+    rtn = [rtn str];
+  endfor
+  rtn = [rtn "\n"];
+  return
+endfunction
+
+### Paper Functions ###
 # These functions are used by the above code to implement everything from the paper.
 
 # Transmission energy to tranmit task with given size and transmission energy rate
