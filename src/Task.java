@@ -90,6 +90,7 @@ class Task {
         }
         transTime += inputData / upRate + outputData / downRate;
         transEnergy += energyRate * inputData;
+        // TODO: Ensure that energy shouldn't be multiplied by 2
     } // sendToAP
     
     /**
