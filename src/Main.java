@@ -203,7 +203,7 @@ class Main {
     } // simpleTest
     
     /**
-     * This method calculates the cost, as defined within the paper, or processing all the tasks.
+     * This method calculates the cost, as defined within the paper, for processing all the tasks.
      *
      * @return Cost of processing all tasks
      * @throws CustomException Indicates program error
@@ -217,7 +217,7 @@ class Main {
             tE += t.totalEnergy();
             if (t.getCompL()) timeL += t.totalTime();           // Total time delay from Local
             else if (t.getCompAP()) timeAP += t.totalTime();    // Total time delay from AP
-            else timeRC += t.totalTime();                       // Total time delat from RC
+            else timeRC += t.totalTime();                       // Total time delay from RC
         }
         return tE + RHO * max(timeL, max(timeAP, timeRC));
     } // calcCost

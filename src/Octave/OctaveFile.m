@@ -39,55 +39,6 @@ minInput = 10 * 8 * power(10,6);
 maxOutput = 3 * 8 * power(10,6);
 minOutput = 1 * 8 * power(10,6);
 
-### Scenario setup ###
-# Rendomly assign input and output sizes for the tasks
-
-dataIn = (rand(1,numTasks) .* (maxInput - minInput)) .+ minInput;
-dataOut = (rand(1,numTasks) .* (maxOutput - minOutput)) .+ minOutput;
-disp("Input Data Vector");
-disp(dataIn');
-disp("Output Data Vector");
-disp(dataOut');
-
-# If you want to hardcode a solution then use these vectors
-x = []; # x vector from paper
-y = []; # y vector from paper
-
-### Procedure ###
-# This is the code that implements SeDuMi
-
-G0 = reshape(gNot(), 1, []);
-Gl = reshape(gSubL(), 1, []);
-Ga = reshape(gSubA(), 1, []);
-Gc = reshape(gSubC(), 1, []);
-
-A = [Gl', Ga', Gc'];
-temp = [];
-for i = 1:(numTasks * 2)
-  Gp = reshape(gSubP(i), 1, []);
-  temp = [temp, Gp'];
-endfor
-A = [A, temp];
-temp = (-1) .* temp;
-A = [A, temp];
-A = A';
-c = G0;
-temp = zeros(1, numTasks * 4);
-b = [(-tSubL()' * matrixOne()), 0, 0, temp]';
-[xOut, yOut, infoOut] = sedumi(A, b, c);
-
-### Transform SeDuMi Output ###
-# This is the code to convert output to useful data
-# All capped variables are from algorithm in the paper
-
-N = numTasks;
-L = 100;
-X = reshape(xOut, [columns(gNot()),rows(gNot())]);
-X_PRIME = X(1:(2*N), 1:(2*N));
-printToFile(X_PRIME, "X_PRIME Matrix.txt");
-
-u = []';
-
 ### Helper Functions ###
 # These functions are for output and for implementing algorithm from paper
 
@@ -106,6 +57,20 @@ function rtn = rptStr(str, times)
     rtn = [rtn str];
   endfor
   rtn = [rtn "\n"];
+  return
+endfunction
+
+# Prints IO dat to file
+function printIOData(fileName)
+  global dataIn;
+  global dataOut;
+  outFile = fopen(fileName, "w");
+  fprintf(outFile,"%s\n", "This file containes Data In vector then Data Out vector");
+  outFormat = rptStr("%f\t", columns(dataIn));
+  fprintf(outFile,outFormat, dataIn);
+  outFormat = rptStr("%f\t", columns(dataOut));
+  fprintf(outFile,outFormat, dataOut);
+  fclose(outFile);
   return
 endfunction
 
@@ -510,3 +475,141 @@ function matrixX = matrixX() # Tested
   matrixX = matrixZ() * matrixZ()';
   return
 endfunction
+
+### Scenario setup ###
+# Rendomly assign input and output sizes for the tasks
+
+dataIn = (rand(1,numTasks) .* (maxInput - minInput)) .+ minInput;
+dataOut = (rand(1,numTasks) .* (maxOutput - minOutput)) .+ minOutput;
+printIOData("IO.dat");
+
+# If you want to hardcode a solution then use these vectors
+x = []; # x vector from paper
+y = []; # y vector from paper
+
+### Procedure ###
+# This is the code that implements SeDuMi
+N = numTasks;
+
+G0 = reshape(gNot(), [], 1);
+Gl = reshape(gSubL(), [], 1);
+Ga = reshape(gSubA(), [], 1);
+Gc = reshape(gSubC(), [], 1);
+
+# X(2N+2,2N+2) = 1 restriction from paper
+R1 = zeros(1, size(Gl));
+R1((2*N+2)**2) = 1;
+R2 = R1;
+R2((2*N+2)**2) = -1;
+
+A = [Gl, Ga, Gc];
+temp = [];
+for i = 1:(numTasks * 2)
+  Gp = reshape(gSubP(i), 1, []);
+  temp = [temp, Gp'];
+endfor
+A = [A, temp];
+temp = (-1) .* temp;
+A = [A, temp, R1', R2'];
+A = A';
+c = G0;
+temp = zeros(1, numTasks * 4);
+b = [(-tSubL()' * matrixOne()), 0, 0, temp, 1, -1]';
+#[xOut, yOut, infoOut] = sedumi(A, b, c);
+
+
+### ATTEMPT 2 ###
+K.f = N*2+1;
+# b holds the main G within optimization
+# A holds the constants in front of X
+# c holds the rhs
+
+# b
+b = G0;
+
+# A
+theGps = [];
+for i = 1:(numTasks * 2)
+  Gp = reshape(gSubP(i), 1, []);
+  theGps = [theGps, Gp'];
+endfor
+#A = [theGps, R1', Gl', Ga', Gc']';
+
+# c
+theGpsZ = zeros(1,numTasks * 2);
+c = [theGpsZ, 1, (-tSubL()' * matrixOne()), 0, 0]';
+##disp(K);
+##[xOut, yOut, infoOut] = sedumi(A, b, c, K);
+
+
+## Attempt 3
+num_vars = columns(G0);
+disp(num_vars);
+m1 = 2*N+3; # Rows in A1
+m2 = 1; # Rows in A2
+
+# A1
+A = [];
+theGps = [];
+for i = 1:(numTasks * 2)
+  Gp = reshape(gSubP(i), [], 1);
+  theGps = [theGps, Gp];
+endfor
+A1 = [theGps, R1, Ga, Gc]';
+
+theGpsZ = zeros(1,numTasks * 2);
+b = [theGpsZ, 1];
+
+A2 = [Gl]';
+
+b = [b, 0, 0, (-tSubL()' * matrixOne())];
+clear("Ks");
+Ks.l = num_vars + 1;
+
+
+c = [G0, 0];
+As = [A1, zeros(m1,m2); A2, 1];
+#Bs = [b1', b3'];
+#Cs = [c, zeros(m2+1, 1)'];
+[xOut, yOut, info]=sedumi(As,b,c,Ks);
+xOut = xOut(1:((2*N+2)**2));
+
+### Transform SeDuMi Output ###
+# This is the code to convert output to useful data
+# All capped variables are from algorithm in the paper
+
+N = numTasks;
+SIZE = 2*N+2;
+L = 100;
+X = reshape(xOut, [SIZE, SIZE]);
+disp(X);
+X_PRIME = X(1:(2*N), 1:(2*N));
+printToFile(X_PRIME, "X_PRIME Matrix.txt");
+U = diag(X_PRIME);
+SIGMA = X_PRIME - (U * U')
+theVs = [];
+
+for l = 1:L
+  V = zeros(1,2*N);
+  for j = 1:(2*N)
+    GAMMA = qfuncinv(U(j)) * sqrt(SIGMA(j,j)) + U(j);
+    V(j) = ((sign(V(j) - GAMMA))+1)/2;
+  endfor
+  theVs = [theVs, V];
+endfor
+
+min = 1000;
+for i = 1:L
+  x = V(1:numTasks);
+  y = V((numTasks+1):(numTasks*2));
+  if (min > trace(gNot() * matrixX()))
+    min = gNot()*matrixX();
+    xsol = x;
+    ysol = y;
+  endif
+endfor
+
+
+
+
+
