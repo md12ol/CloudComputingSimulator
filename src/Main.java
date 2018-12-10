@@ -30,57 +30,57 @@ import static java.lang.Math.pow;
  */
 
 class Main {
-    
+
     // Program Execution Constants
-    private static final boolean COLLECTING_DATA = false;   // True when collecting data for report
-    
+    private static final boolean COLLECTING_DATA = true;   // True when collecting data for report
+
     // Task Constants
     private static final double MAX_INPUT_SIZE = 30 * 8 * pow(10, 6);   // Bits; 30MB
     private static final double MIN_INPUT_SIZE = 10 * 8 * pow(10, 6);   // Bits; 10MB
     private static final double MAX_OUTPUT_SIZE = 3 * 8 * pow(10, 6);   // Bits; 3MB
     private static final double MIN_OUTPUT_SIZE = 1 * 8 * pow(10, 6);   // Bits; 1MB
     private static final double CYCLES_PER_BIT = 1900.0 / 8.0;          // Cycles per Bit; for task processing
-    
+
     // Local (L) Constants
     private static final double LOCAL_CPU_RATE = 500 * pow(10, 6);                  // Cycles per second
     private static final double LOCAL_TRANS_RATE = 72.2 * pow(10, 6);               // Bits per second
     private static final double LOCAL_COMP_ENERGY_RATE = 1 / (730 * pow(10, 6));    // Jules per cycle
     private static final double LOCAL_TRANS_ENERGY_RATE = 1.42 * pow(10, -7);       // Jules per bit (up and down)
-    
+
     // (Computational) Access Point ((C)AP) Constants
     private static final double CAP_CPU_RATE = 5 * pow(10, 9);      // Cycles per second
     private static final double CAP_TRANS_RATE = 15 * pow(10, 6);   // Bits per second
-    
+
     // Remote Cloud (RC) Constants
     private static final double RC_CPU_RATE = 10 * pow(10, 9);      // Cycles per second
-    
+
     // LAC 100 Constants
     private static final double ALPHA = 2 * pow(10, -7);            // Jules per second
     private static final double BETA = 5 * pow(10, -7);             // Jules per second
     private static final double RHO = 1;                            // Jules per second
-    
+
     // Other Constants
     private static final int NUMBER_OF_TASKS = 10;                  // Number of tasks to simulate
-    private static final int NUMBER_OF_UNIQUE_METHODS = 7;          // Number of task offloading
-    private static final int NUMBER_OF_RUNS = 30;                   // Times to repeat each test for data collection
-    private static final long SEED = 587469L;                       // Random number seed
-    
+    private static final int NUMBER_OF_UNIQUE_METHODS = 7;          // Number of task offloading methods
+    private static final int NUMBER_OF_RUNS = 100;                  // Times to repeat each test for data collection
+    private static final long SEED = (long) (Math.random() * 5000); //587469L;                       // Random number seed
+
     // The Mobile Cloud Computing Architecture
     private ArrayList<Task> tasks;                                  // Holds the tasks to be executed
-    
+
     // Other Variables
     private Random rand = new Random(SEED);                         // For random number generation
-    
+
     private Main() throws CustomException {
         LocalUser localUser;        // Simulates the local user
         AccessPoint accessPoint;    // Simulates the access point
         RemoteCloud remoteCloud;    // Simulates the remote cloud
-        
+
         remoteCloud = new RemoteCloud(RC_CPU_RATE, BETA);
         accessPoint = new AccessPoint(remoteCloud, CAP_CPU_RATE, CAP_TRANS_RATE, ALPHA);
         localUser = new LocalUser(accessPoint, LOCAL_CPU_RATE, LOCAL_COMP_ENERGY_RATE, LOCAL_TRANS_ENERGY_RATE
                 , LOCAL_TRANS_RATE);
-    
+
         loadTasks(localUser); // Tasks are loaded into localUser
         if (!COLLECTING_DATA) { // Typical execution for marking
             switch (promptUser()) {
@@ -110,15 +110,17 @@ class Main {
                     break;
                 case '5': // LC 100
                     System.out.println("* * * NOT YET IMPLEMENTED * * *");
-                    markForLC100();
+                    markForLC100(localUser);
                     simpleTest(localUser);
                     break;
                 case '6': // LAC 100
-                    System.out.println("* * * NOT YET IMPLEMENTED * * *");
-                    markForLAC100();
+                    markForLAC100(localUser);
                     simpleTest(localUser);
                     break;
-                // TODO: Implement case 7 for Random Mapping 100
+                case '7': // RM 100
+                    markForRM100();
+                    simpleTest(localUser);
+                    break;
             }
         } else { // Atypical execution for data gathering
             System.out.println("Starting data collection...");
@@ -126,7 +128,7 @@ class Main {
             System.out.println("Done. Data located in Output directory.");
         }
     } // Constructor
-    
+
     /**
      * Creates a new instance of Main which runs the simulation.
      *
@@ -140,7 +142,7 @@ class Main {
             e.printStackTrace();
         }
     } // main
-    
+
     /**
      * This method creates the tasks that are to be processed.  Tasks are comprised of an input and output data size.
      * Once made, the tasks are loaded into the local user.
@@ -152,11 +154,11 @@ class Main {
         double outRange;    // Range of output size
         double in;          // Input size
         double out;         // Output size
-        
+
         inRange = MAX_INPUT_SIZE - MIN_INPUT_SIZE + 1;
         outRange = MAX_OUTPUT_SIZE - MIN_OUTPUT_SIZE + 1;
         tasks = new ArrayList<>(NUMBER_OF_TASKS);
-        
+
         for (int t = 0; t < NUMBER_OF_TASKS; t++) {
             in = rand.nextDouble() * inRange + MIN_INPUT_SIZE;
             out = rand.nextDouble() * outRange + MIN_OUTPUT_SIZE;
@@ -164,7 +166,7 @@ class Main {
         }
         local.setTasks(tasks);
     } // setTasks
-    
+
     /**
      * This method is for running multiple different task offloading methods consecutively to be able to compare data
      * against various methods in a single program run.
@@ -188,7 +190,7 @@ class Main {
         markForRandom();
         simpleTest(local);
     } // testSuite
-    
+
     /**
      * This method signifies a single test where the pre-loaded and marked tasks are executed as per their marking
      * and the results from this test are printed, task by task as well as the total energy, time and cost of
@@ -201,7 +203,7 @@ class Main {
         local.resolveTasks();
         displayAllTaskInfo();
     } // simpleTest
-    
+
     /**
      * This method calculates the cost, as defined within the paper, for processing all the tasks.
      *
@@ -221,7 +223,7 @@ class Main {
         }
         return tE + RHO * max(timeL, max(timeAP, timeRC));
     } // calcCost
-    
+
     /**
      * This method collects data from all the task offloading methods defined within the paper.  Each method is
      * repeated runs number of times and all the results are placed within results.
@@ -250,7 +252,7 @@ class Main {
             try {
                 for (int run = 0; run < runs; run++) {
                     loadTasks(local);                   // Load new tasks
-                    markAll(test);                      // Mark for proper execution
+                    markAll(test, local);               // Mark for proper execution
                     local.resolveTasks();               // Resolve tasks
                     results.get(test).add(calcCost());  // Append to results
                 }
@@ -260,7 +262,7 @@ class Main {
         }
         return results;
     } // dataCollection
-    
+
     /**
      * This method resets all the calculated information regarding the tasks which are to be executed.  Resetting is
      * necessary in order to use the same tasks using various offloading heuristics in order to compare performance.
@@ -270,7 +272,7 @@ class Main {
             t.reset();
         }
     } // resetTasks
-    
+
     /**
      * This method prints the results from the simulation to the user.  This includes the time and energy of each
      * task, the total time and energy of all the tasks as well as the cost, as defined within the paper.
@@ -292,7 +294,7 @@ class Main {
                 + f.format(tE + tT));
         System.out.println("COST: " + f.format(calcCost()) + " Jules");
     } // displayAllTaskInfo
-    
+
     /**
      * This method takes data within an ArrayList and outputs the data to the Output folder within the project.
      *
@@ -327,7 +329,7 @@ class Main {
             }
         }
     } // outputData
-    
+
     /**
      * This method asks the user for their preferred option for running the simulation.  Upon running the program
      * the options will appear within the terminal and the user's response will be returned to facilitate
@@ -343,20 +345,21 @@ class Main {
         System.out.println("\t[2] Access Point:\tAll tasks will be processed on the Access Point.");
         System.out.println("\t[3] Remote Cloud:\tAll tasks will be processed on the Remote Cloud.");
         System.out.println("\t[4] Random:\t\t\tEach task is randomly assigned to LU, AP, or RC.");
-        System.out.println("\t[5] LC 100:\t\t\tProposed method from paper. Not yet implemented.");
-        System.out.println("\t[6] LAC 100:\t\tProposed method from paper. Not yet implemented.");
+        System.out.println("\t[5] LC 100:\t\t\tProposed method from paper. Does not include AP.");
+        System.out.println("\t[6] LAC 100:\t\tPrimary offloading method investigated within paper.");
+        System.out.println("\t[7] RM 100:\t\t\tProposed method from paper. Uses Random Mapping algorithm.");
         return s.next().charAt(0);
     } // promptUser
-    
+
     // markForX Methods
-    
+
     /**
      * This method uses the appropriate, numerically indexed, markForX where X can be: 1) Local, 2) Access Point, 3)
      * Remote Cloud, 4) Random, 5) LC100, 6) LAC100, and 7) Random Mapping 100
      *
      * @param test the associated numerical index of the appropriate markForX method.
      */
-    private void markAll(int test) throws CustomException, UnsupportedOperationException {
+    private void markAll(int test, LocalUser local) throws CustomException, UnsupportedOperationException {
         switch (test) {
             case 0:
                 markForL();
@@ -371,16 +374,16 @@ class Main {
                 markForRandom();
                 break;
             case 4:
-                markForLC100();
+                markForLC100(local);
                 break;
             case 5:
-                markForLAC100();
+                markForLAC100(local);
                 break;
             case 6:
                 markForRM100();
         }
     } // markAll
-    
+
     /**
      * This method marks the tasks to be processed locally.
      */
@@ -389,7 +392,7 @@ class Main {
             t.markL();
         }
     } // markForL
-    
+
     /**
      * This method marks the tasks to be processed on the access point.
      */
@@ -398,7 +401,7 @@ class Main {
             t.markAP();
         }
     } // markForAP
-    
+
     /**
      * This method marks the tasks to be processed on the remote cloud.
      */
@@ -407,7 +410,7 @@ class Main {
             t.markRC();
         }
     } // markForRC
-    
+
     /**
      * This method marks the tasks to be processed randomly at one of the three locations.
      */
@@ -424,25 +427,115 @@ class Main {
             }
         }
     } // markForRandom
-    
+
     /**
      * This method runs a simulation using the LC100 method described in the paper.
      */
-    private void markForLC100() {
-        throw new UnsupportedOperationException("Not yet implemented");
+    private void markForLC100(LocalUser local) throws CustomException {
+
+        int best_locations[] = new int[10];
+        double best_cost = Double.MAX_VALUE;
+
+        int i[] = new int[10];
+
+        for (i[0] = 0; i[0] < 2; i[0]++) {
+            for (i[1] = 0; i[1] < 2; i[1]++) {
+                for (i[2] = 0; i[2] < 2; i[2]++) {
+                    for (i[3] = 0; i[3] < 2; i[3]++) {
+                        for (i[4] = 0; i[4] < 2; i[4]++) {
+                            for (i[5] = 0; i[5] < 2; i[5]++) {
+                                for (i[6] = 0; i[6] < 2; i[6]++) {
+                                    for (i[7] = 0; i[7] < 2; i[7]++) {
+                                        for (i[8] = 0; i[8] < 2; i[8]++) {
+                                            for (i[9] = 0; i[9] < 2; i[9]++) {
+                                                // Mark the tasks according to locations from above loops
+                                                for (int k = 0; k < tasks.size(); k++) {
+                                                    tasks.get(k).mark(i[k] * 2);
+                                                }
+                                                local.resolveTasks();
+                                                double new_cost = calcCost();
+                                                if (new_cost < best_cost) {
+                                                    best_cost = new_cost;
+                                                    best_locations = new int[]{i[0] * 2, i[1] * 2, i[2] * 2, i[3] * 2, i[4] * 2, i[5] * 2, i[6] * 2, i[7] * 2, i[8] * 2, i[9] * 2};
+                                                }
+                                                resetTasks();
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        // Mark the tasks according to the best found locations
+        for (int k = 0; k < tasks.size(); k++) {
+            tasks.get(k).mark(best_locations[k]);
+        }
     } // markForLC100
-    
+
     /**
      * This method runs a simulation using the LAC100 method described in the paper.
      */
-    private void markForLAC100() {
-        throw new UnsupportedOperationException("Not yet implemented");
+    private void markForLAC100(LocalUser local) throws CustomException {
+
+        int best_locations[] = new int[10];
+        double best_cost = Double.MAX_VALUE;
+
+        int i[] = new int[10];
+
+        for (i[0] = 0; i[0] < 3; i[0]++) {
+            for (i[1] = 0; i[1] < 3; i[1]++) {
+                for (i[2] = 0; i[2] < 3; i[2]++) {
+                    for (i[3] = 0; i[3] < 3; i[3]++) {
+                        for (i[4] = 0; i[4] < 3; i[4]++) {
+                            for (i[5] = 0; i[5] < 3; i[5]++) {
+                                for (i[6] = 0; i[6] < 3; i[6]++) {
+                                    for (i[7] = 0; i[7] < 3; i[7]++) {
+                                        for (i[8] = 0; i[8] < 3; i[8]++) {
+                                            for (i[9] = 0; i[9] < 3; i[9]++) {
+                                                // Mark the tasks according to locations from above loops
+                                                for (int k = 0; k < tasks.size(); k++) {
+                                                    tasks.get(k).mark(i[k]);
+                                                }
+                                                local.resolveTasks();
+                                                double new_cost = calcCost();
+                                                if (new_cost < best_cost) {
+                                                    best_cost = new_cost;
+                                                    best_locations = new int[]{i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7], i[8], i[9]};
+                                                }
+                                                resetTasks();
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        // Mark the tasks according to the best found locations
+        for (int k = 0; k < tasks.size(); k++) {
+            tasks.get(k).mark(best_locations[k]);
+        }
     } // markForLAC100
-    
+
     /**
      * This method runs a simulation using the Random Mapping 100 method described in the paper.
      */
-    private void markForRM100() {
-        throw new UnsupportedOperationException("Not yet implemented");
+    private void markForRM100() throws CustomException {
+        for (Task t : tasks) {
+            if (Math.random() < 0.5) {
+                t.markL();
+            } else if (Math.random() < 0.5) {
+                t.markAP();
+            } else {
+                t.markRC();
+            }
+        }
     } // markForRM100
+
+
 }

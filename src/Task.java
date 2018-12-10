@@ -89,8 +89,7 @@ class Task {
             arrived = true;
         }
         transTime += inputData / upRate + outputData / downRate;
-        transEnergy += energyRate * inputData;
-        // TODO: Ensure that energy shouldn't be multiplied by 2
+        transEnergy += energyRate * inputData + energyRate * outputData;
     } // sendToAP
     
     /**
@@ -179,6 +178,23 @@ class Task {
         compL = false;
         compAP = false;
         compRC = true;
+    }
+
+    void mark(int location) throws CustomException {
+        if (arrived || calculated) {
+            throw new CustomException("ERROR: Task being marked after arrival and/or calculation");
+        }
+        switch (location) {
+            case 0:
+                markL();
+                break;
+            case 1:
+                markAP();
+                break;
+            case 2:
+                markRC();
+                break;
+        }
     }
     
     /**
