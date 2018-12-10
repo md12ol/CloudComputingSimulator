@@ -12,7 +12,7 @@ import static java.lang.Math.pow;
 
 /**
  * COSC 5P06 Project.
- * October 31st 2018.
+ * December
  * Tyler Cowan (tc14vv, 5635784) and
  * Michael Dubé (md12ol, 5243845)
  * <p>
@@ -433,10 +433,10 @@ class Main {
      */
     private void markForLC100(LocalUser local) throws CustomException {
 
-        int best_locations[] = new int[10];
+        int[] best_locations = new int[10];
         double best_cost = Double.MAX_VALUE;
 
-        int i[] = new int[10];
+        int[] i = new int[10];
 
         for (i[0] = 0; i[0] < 2; i[0]++) {
             for (i[1] = 0; i[1] < 2; i[1]++) {
@@ -480,10 +480,10 @@ class Main {
      */
     private void markForLAC100(LocalUser local) throws CustomException {
 
-        int best_locations[] = new int[10];
+        int[] best_locations = new int[10];
         double best_cost = Double.MAX_VALUE;
 
-        int i[] = new int[10];
+        int[] i = new int[10];
 
         for (i[0] = 0; i[0] < 3; i[0]++) {
             for (i[1] = 0; i[1] < 3; i[1]++) {
