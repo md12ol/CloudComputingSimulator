@@ -2,7 +2,7 @@
   COSC 5P06 Project - Part 3
   December 10th, 2018
   Tyler Cowan (tc14vv, 5635784) and
-Michael Dub� (md12ol, 5243845)
+Michael Dube (md12ol, 5243845)
 
 This Octave file is meant to solve the non - convex Quadratically Constrained Quadratic Program (QCQP)
 of which the solution to the task offloading decision is formulated within the paper.  This
@@ -73,17 +73,17 @@ minOutput = 1 * 8 * power(10,6);
 function printToFile(matrix, fileName)
 outFile = fopen(fileName, "w");
 outFormat = rptStr("%f\t", rows(matrix));
-fprintf(outFile,outFormat, matrix);
+fprintf(outFile, outFormat, matrix);
 fclose(outFile);
 endfunction
 
 # Repeats the string str the number of times provided, appends newline at end
 function rtn = rptStr(str, times)
 rtn = "";
-for i = 1:times
-rtn = [rtn str];
+for i = 1 : times
+rtn =[rtn str];
 endfor
-rtn = [rtn "\n"];
+rtn =[rtn "\n"];
 return
 endfunction
 
@@ -92,11 +92,11 @@ function printIOData(fileName)
 global dataIn;
 global dataOut;
 outFile = fopen(fileName, "w");
-fprintf(outFile,"%s\n", "This file containes Data In vector then Data Out vector");
+fprintf(outFile, "%s\n", "This file containes Data In vector then Data Out vector");
 outFormat = rptStr("%f\t", columns(dataIn));
-fprintf(outFile,outFormat, dataIn);
+fprintf(outFile, outFormat, dataIn);
 outFormat = rptStr("%f\t", columns(dataOut));
-fprintf(outFile,outFormat, dataOut);
+fprintf(outFile, outFormat, dataOut);
 fclose(outFile);
 return
 endfunction
@@ -166,7 +166,7 @@ function timeLSum = timeLSum(); # Tested
 global numTasks;
 global x;
 timeLSum = 0;
-for i = 1:numTasks
+for i = 1 : numTasks
 if (x(i) == 0)
 timeLSum = timeLSum + timeL(i);
 endif
@@ -197,7 +197,7 @@ endfunction
 function timeAPSum = timeAPSum(); # Tested
 global numTasks;
 timeAPSum = 0;
-for i = 1:numTasks
+for i = 1 : numTasks
 timeAPSum = timeAPSum + timeAP(i);
 endfor
 return
@@ -233,7 +233,7 @@ global dataIn;
 global localTrans;
 global remoteTrans;
 timeRCSum = 0;
-for i = 1:numTasks
+for i = 1 : numTasks
 timeRCSum = timeRCSum + timeRC(i);
 endfor
 return
@@ -260,14 +260,14 @@ function w = w() # Tested
 global x;
 global y;
 global numTasks;
-w = [x, y, maxTime()]';
+w =[x, y, maxTime()]';
 return
 endfunction
 
 # Matrix E_l from paper
 function eSubL = eSubL() # Tested
 global numTasks;
-eSubL = eSubLi(1:numTasks)';
+eSubL = eSubLi(1 : numTasks)';
 return
 endfunction
 
@@ -276,7 +276,7 @@ function eSubT = eSubT() # Tested
 global numTasks;
 global dataIn;
 global localTransER;
-eSubT = arrayfun(@(x) transEnergy(x,localTransER), dataIn)';
+eSubT = arrayfun(@(x) transEnergy(x, localTransER), dataIn)';
 return
 endfunction
 
@@ -344,21 +344,21 @@ endfunction
 
 # Matrix 0' from paper
 function zeroPrime = zeroPrime(n); # Tested
-zeroPrime = zeros(n,1);
+zeroPrime = zeros(n, 1);
 return
 endfunction
 
 # Matrix z from paper
 function matrixZ = matrixZ(); # Tested
 global numTasks;
-matrixZ = [w()',1];
+matrixZ =[w()', 1];
 return
 endfunction
 
 # Matrix T_l from paper
 function tSubL = tSubL() # Tested
 global numTasks;
-tSubL = timeL(1:numTasks)';
+tSubL = timeL(1 : numTasks)';
 return
 endfunction
 
@@ -373,14 +373,14 @@ endfunction
 function aNotPrime = aNotPrime(); # Tested
 global constA;
 global constB;
-aNotPrime = (1/2) .* diag(-constA .* cSubK() + constB .* cSubK());
+aNotPrime = (1 / 2) . * diag(-constA . * cSubK() + constB . * cSubK());
 return
 endfunction
 
 # Matrix A_0 from paper
 function aNot = aNot(); # Tested
 global numTasks;
-aNot = [zero(), aNotPrime(), zeroPrime(numTasks);
+aNot =[zero(), aNotPrime(), zeroPrime(numTasks);
 aNotPrime()', zero(), zeroPrime(numTasks);
 zeroPrime(numTasks)', zeroPrime(numTasks)', 0];
 return
@@ -389,14 +389,14 @@ endfunction
 # Matrix (A_a)'
 function aSubAPrime = aSubAPrime(); # Tested
 global fSubA;
-aSubAPrime = (-1/(2 * fSubA)) * diag(dSubIn()) * diag(App());
+aSubAPrime = (-1 / (2 * fSubA)) * diag(dSubIn()) * diag(App());
 return
 endfunction
 
 # Matrix A_a
 function aSubA = aSubA(); # Tested
 global numTasks;
-aSubA = [zero(), aSubAPrime(), zeroPrime(numTasks);
+aSubA =[zero(), aSubAPrime(), zeroPrime(numTasks);
 aSubAPrime()', zero(), zeroPrime(numTasks);
 zeroPrime(numTasks)', zeroPrime(numTasks)', 0];
 return
@@ -406,15 +406,15 @@ endfunction
 function aSubCPrime = aSubCPrime(); # Tested
 global remoteTrans;
 global fSubC;
-aSubCPrime = (1/2) * ((1/remoteTrans) .* (diag(dSubIn() + dSubOut()))
-    + (1/fSubC) .* (diag(dSubIn()) * diag(dSubOut())));
+aSubCPrime = (1 / 2) * ((1 / remoteTrans) . * (diag(dSubIn() + dSubOut()))
+    + (1 / fSubC) . * (diag(dSubIn()) * diag(dSubOut())));
 return
 endfunction
 
 # Matrix A_c
 function aSubC = aSubC(); # Tested
 global numTasks;
-aSubC = [zero(), aSubCPrime(), zeroPrime(numTasks)();
+aSubC =[zero(), aSubCPrime(), zeroPrime(numTasks)();
 aSubCPrime(), zero(), zeroPrime(numTasks);
 zeroPrime(numTasks)', zeroPrime(numTasks)', 0];
 return
@@ -425,14 +425,14 @@ function bNot = bNot(); # Tested
 global constA;
 global constR;
 global numTasks;
-bNot = [(-eSubL()+eSubT+eSubR()+(constA .* cSubK()))', zeroPrime(numTasks)', constR]';
+bNot =[(-eSubL() + eSubT + eSubR() + (constA . * cSubK()))', zeroPrime(numTasks)', constR]';
 return
 endfunction
 
 # Matrix b_l
 function bSubL = bSubL(); # Tested
 global numTasks;
-bSubL = (-1) .* [tSubL()', zeroPrime(numTasks)', 1]';
+bSubL = (-1) . *[tSubL()', zeroPrime(numTasks)', 1]';
 return
 endfunction
 
@@ -440,7 +440,7 @@ endfunction
 function bSubAPrime = bSubAPrime(); # Tested
 global localTrans;
 global fSubA;
-bSubAPrime = (1/localTrans) .* dSubIn() + (1/localTrans) .* dSubOut() + (1/fSubA) .* (diag(dSubIn()) *
+bSubAPrime = (1 / localTrans) . * dSubIn() + (1 / localTrans) . * dSubOut() + (1 / fSubA) . * (diag(dSubIn()) *
     App());
 return
 endfunction
@@ -448,7 +448,7 @@ endfunction
 # Matrix b_a
 function bSubA = bSubA(); # Tested
 global numTasks;
-bSubA = [bSubAPrime()', zeroPrime(numTasks)', -1]';
+bSubA =[bSubAPrime()', zeroPrime(numTasks)', -1]';
 return
 endfunction
 
@@ -456,44 +456,44 @@ endfunction
 function bSubC = bSubC(); # Tested
 global localTrans;
 global numTasks;
-bSubC = [((1/localTrans) .* dSubIn() + (1/localTrans) * dSubOut())', zeroPrime(numTasks)', -1]';
+bSubC =[((1 / localTrans) . * dSubIn() + (1 / localTrans) * dSubOut())', zeroPrime(numTasks)', -1]';
 return
 endfunction
 
 # Matrix G_0 from paper
 function gNot = gNot(); # Tested
 global numTasks;
-gNot = [aNot(), (1/2) .* bNot();
-(1/2) .* bNot()', 0];
+gNot =[aNot(), (1 / 2) . * bNot();
+(1 / 2) . * bNot()', 0];
 return
 endfunction
 
 # Matrix G_l from paper
 function gSubL = gSubL() # Tested
 global numTasks;
-gSubL = [zeros(numTasks * 2 + 1, numTasks * 2 + 1), (1/2) .* bSubL();
-(1/2) .* bSubL()', 0];
+gSubL =[zeros(numTasks * 2 + 1, numTasks * 2 + 1), (1 / 2) . * bSubL();
+(1 / 2) . * bSubL()', 0];
 return
 endfunction
 
 # Matrix G_a
 function gSubA = gSubA() # Tested
-gSubA = [aSubA(), (1/2) .* bSubA();
-(1/2) .* bSubA()', 0];
+gSubA =[aSubA(), (1 / 2) . * bSubA();
+(1 / 2) . * bSubA()', 0];
 return
 endfunction
 
 # Matrix G_c
 function gSubC = gSubC() # Tested
-gSubC = [aSubC(), (1/2) .* bSubC();
-(1/2) .* bSubC()', 0];
+gSubC =[aSubC(), (1 / 2) . * bSubC();
+(1 / 2) . * bSubC()', 0];
 return
 endfunction
 
 # Matrix G_p from paper
 function gSubP = gSubP(p) # Tested
-gSubP = [diag(eSubIPrime(p)), (-1/2) .* eSubIPrime(p);
-(-1/2) .* eSubIPrime(p)', 0];
+gSubP =[diag(eSubIPrime(p)), (-1 / 2) . * eSubIPrime(p);
+(-1 / 2) . * eSubIPrime(p)', 0];
 return
 endfunction
 
@@ -511,39 +511,39 @@ dataOut = (rand(1,numTasks) .* (maxOutput - minOutput)) .+ minOutput;
 printIOData("IO.dat");
 
 ### Semidefinite Linear Programming Problem Definition ###
-N = numTasks;
-
 # Reshape into column vectors
 G0 = reshape(gNot(), [], 1);
 Gl = reshape(gSubL(), [], 1);
 Ga = reshape(gSubA(), [], 1);
 Gc = reshape(gSubC(), [], 1);
 
+N = numTasks;
+num_vars = rows(G0);
+clear("Ks");
+Ks.l = num_vars;
+
 # Handle restriction X(2 * N + 2, 2 * N + 2) = 1
 R1 = zeros(rows(Gl), columns(Gl));
 R1((2*N+2)**2) = 1;
 
-num_vars = rows(G0);
-m1 = 2*N+3; # Rows in A1
-
+# Restrictions with Gp
 theGps = [];
 for i = 1:(numTasks * 2)
 Gp = reshape(gSubP(i), [], 1);
-theGps = [theGps, Gp];
+theGps =[theGps, Gp];
 endfor
+theGpsZ = zeros(1, numTasks * 2);
 
+# Making
 A =[theGps, R1, Ga, Gc, Gl]';
-theGpsZ = zeros(1,numTasks * 2);
 b =[theGpsZ, 1, 0, 0, (-tSubL()' * matrixOne())];
-clear("Ks");
-Ks.l = num_vars;
+
 c = G0;
 [xOut, yOut, info] = sedumi(A, b, c, Ks);
 
 ### Transform SeDuMi Output ###
 # This is the code to convert output to useful data
 # All capped variables are from algorithm in the paper
-
 N = numTasks;
 SIZE = 2*N+2;
 L = 100;
@@ -556,10 +556,10 @@ SIGMA = X_PRIME - (U * U')
 theVs = [];
 
 for l = 1:L
-V = zeros(1,2*N);
-for j = 1:(2*N)
-GAMMA = qfuncinv(U(j)) * sqrt(SIGMA(j,j)) + U(j);
-V(j) = ((sign(V(j) - GAMMA))+1)/2;
+V = zeros(1, 2 * N);
+for j = 1 : (2 * N)
+GAMMA = qfuncinv(U(j)) * sqrt(SIGMA(j, j)) + U(j);
+V(j) = ((sign(V(j) - GAMMA)) + 1) / 2;
 endfor
 theVs =[theVs, V'];
 endfor
@@ -567,10 +567,10 @@ endfor
 min = 1000;
 for i = 1:L
 curMatrix = theVs( : , i);
-x = curMatrix(1 : numTasks)
-y = curMatrix((numTasks + 1) : (numTasks * 2))
+x = curMatrix(1 : numTasks);
+y = curMatrix((numTasks + 1) : (numTasks * 2));
 if (min > trace(gNot() * matrixX()))
-min = gNot()*matrixX();
+min = gNot() * matrixX();
 xsol = x;
 ysol = y;
 endif

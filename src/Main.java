@@ -12,7 +12,7 @@ import static java.lang.Math.pow;
 
 /**
  * COSC 5P06 Project.
- * December
+ * December 10th, 2018
  * Tyler Cowan (tc14vv, 5635784) and
  * Michael Dubé (md12ol, 5243845)
  * <p>
@@ -433,9 +433,11 @@ class Main {
     } // markForRandom
 
     /**
-     * This method runs a simulation using the LC100 method described in the paper.
+     * This method runs a simulation using the LC 100 method described in the paper.
      * The algorithm was not successfully implemented, and so the best possible solution was obtained instead.
      * If the intended algorithm was implemented, the minimization problem would have obtained similar solutions.
+     *
+     * @param local the local user
      */
     private void markForLC100(LocalUser local) throws CustomException {
         if (NUMBER_OF_TASKS != 10) {
@@ -469,7 +471,9 @@ class Main {
                                                 if (new_cost < best_cost) {
                                                     // Save new optimal solution
                                                     best_cost = new_cost;
-                                                    best_locations = new int[]{i[0] * 2, i[1] * 2, i[2] * 2, i[3] * 2, i[4] * 2, i[5] * 2, i[6] * 2, i[7] * 2, i[8] * 2, i[9] * 2};
+                                                    best_locations = new int[]{i[0] * 2, i[1] * 2, i[2] * 2, i[3] * 2
+                                                            , i[4] * 2, i[5] * 2, i[6] * 2, i[7] * 2
+                                                            , i[8] * 2, i[9] * 2};
                                                 }
                                                 resetTasks();
                                             }
@@ -489,7 +493,9 @@ class Main {
     } // markForLC100
 
     /**
-     * This method runs a simulation using the LAC100 method described in the paper.
+     * This method runs a simulation using the LAC 100 method described in the paper.
+     *
+     * @param local the local user
      */
     private void markForLAC100(LocalUser local) throws CustomException {
         if (NUMBER_OF_TASKS != 10) {
@@ -523,7 +529,8 @@ class Main {
                                                 if (new_cost < best_cost) {
                                                     // Save new optimal solution
                                                     best_cost = new_cost;
-                                                    best_locations = new int[]{i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7], i[8], i[9]};
+                                                    best_locations = new int[]{i[0], i[1], i[2], i[3], i[4], i[5]
+                                                            , i[6], i[7], i[8], i[9]};
                                                 }
                                                 resetTasks();
                                             }
@@ -543,7 +550,7 @@ class Main {
     } // markForLAC100
 
     /**
-     * This method runs a simulation using the Random Mapping 100 method described in the paper.
+     * This method marks the tasks for random mapping using the Random Mapping 100 method described in the paper.
      */
     private void markForRM100() throws CustomException {
         // Randomly assign locations for each task as described in the paper.
@@ -557,6 +564,4 @@ class Main {
             }
         }
     } // markForRM100
-
-
 }
