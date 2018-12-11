@@ -32,7 +32,7 @@ import static java.lang.Math.pow;
 class Main {
 
     // Program Execution Constants
-    private static final boolean COLLECTING_DATA = true;   // True when collecting data for report
+    private static final boolean COLLECTING_DATA = false;   // True when collecting data for report
 
     // Task Constants
     private static final double MAX_INPUT_SIZE = 30 * 8 * pow(10, 6);   // Bits; 30MB
@@ -55,15 +55,17 @@ class Main {
     private static final double RC_CPU_RATE = 10 * pow(10, 9);      // Cycles per second
 
     // LAC 100 Constants
-    private static final double ALPHA = 2 * pow(10, -7);            // Jules per second
-    private static final double BETA = 5 * pow(10, -7);             // Jules per second
+    private static final double ALPHA_BASE = 2;
+    private static final double BETA_BASE = 5;
+    private static final double ALPHA = ALPHA_BASE * pow(10, -7);   // Jules per second (default 2)
+    private static final double BETA = BETA_BASE * pow(10, -7);     // Jules per second (default 5)
     private static final double RHO = 1;                            // Jules per second
 
     // Other Constants
-    private static final int NUMBER_OF_TASKS = 10;                  // Number of tasks to simulate
+    private static final int NUMBER_OF_TASKS = 10;                  // Number of tasks to simulate (keep at 10!)
     private static final int NUMBER_OF_UNIQUE_METHODS = 7;          // Number of task offloading methods
     private static final int NUMBER_OF_RUNS = 100;                  // Times to repeat each test for data collection
-    private static final long SEED = (long) (Math.random() * 5000); //587469L;                       // Random number seed
+    private static final long SEED = 587469L;                       // Random number seed
 
     // The Mobile Cloud Computing Architecture
     private ArrayList<Task> tasks;                                  // Holds the tasks to be executed
@@ -85,39 +87,41 @@ class Main {
         if (!COLLECTING_DATA) { // Typical execution for marking
             switch (promptUser()) {
                 default: // Custom test apparatus (DEFAULT CHOICE)
-                    System.out.println("* * * CUSTOM TEST SUITE * * *");
+                    System.out.println("\n* * * CUSTOM TEST SUITE * * *");
                     testSuite(localUser);
                     break;
                 case '1': // Local User
-                    System.out.println("* * * LOCAL USER * * *");
+                    System.out.println("\n* * * LOCAL USER * * *");
                     markForL();
                     simpleTest(localUser);
                     break;
                 case '2': // Access Point
-                    System.out.println("* * * ACCESS POINT * * *");
+                    System.out.println("\n* * * ACCESS POINT * * *");
                     markForAP();
                     simpleTest(localUser);
                     break;
                 case '3': // Remote Cloud
-                    System.out.println("* * * REMOTE CLOUD * * *");
+                    System.out.println("\n* * * REMOTE CLOUD * * *");
                     markForRC();
                     simpleTest(localUser);
                     break;
                 case '4': // Random
-                    System.out.println("* * * RANDOM * * *");
+                    System.out.println("\n* * * RANDOM * * *");
                     markForRandom();
                     simpleTest(localUser);
                     break;
                 case '5': // LC 100
-                    System.out.println("* * * NOT YET IMPLEMENTED * * *");
+                    System.out.println("\n* * * LC 100 * * *");
                     markForLC100(localUser);
                     simpleTest(localUser);
                     break;
                 case '6': // LAC 100
+                    System.out.println("\n* * * LAC 100 * * *");
                     markForLAC100(localUser);
                     simpleTest(localUser);
                     break;
                 case '7': // RM 100
+                    System.out.println("\n* * * RM 100 * * *");
                     markForRM100();
                     simpleTest(localUser);
                     break;
@@ -174,19 +178,19 @@ class Main {
      * @param local the Local User who starts with the tasks
      */
     private void testSuite(LocalUser local) throws CustomException {
-        System.out.println("* * * LOCAL USER * * *");
+        System.out.println("\n* * * LOCAL USER * * *");
         markForL();         // Setup offloading method
         simpleTest(local);  // Test offloading method
         resetTasks();       // Reset tasks for next test
-        System.out.println("* * * ACCESS POINT * * *");
+        System.out.println("\n* * * ACCESS POINT * * *");
         markForAP();
         simpleTest(local);
         resetTasks();
-        System.out.println("* * * REMOTE CLOUD * * *");
+        System.out.println("\n* * * REMOTE CLOUD * * *");
         markForRC();
         simpleTest(local);
         resetTasks();
-        System.out.println("* * * RANDOM * * *");
+        System.out.println("\n* * * RANDOM * * *");
         markForRandom();
         simpleTest(local);
     } // testSuite
@@ -305,8 +309,8 @@ class Main {
         int testNum = 0; // Keeps track of current test
         for (int i = 0; i < NUMBER_OF_UNIQUE_METHODS; i++) {
             try {
-                new File("./Output/" + i + ".txt");
-                outs.add(new FileWriter("./Output/" + i + ".txt"));
+                new File("./Output/" + i + "_A" + ALPHA_BASE + "B" + BETA_BASE + ".txt");
+                outs.add(new FileWriter("./Output/" + i + "_A" + ALPHA_BASE + "_B" + BETA_BASE + ".txt"));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -430,14 +434,19 @@ class Main {
 
     /**
      * This method runs a simulation using the LC100 method described in the paper.
+     * The algorithm was not successfully implemented, and so the best possible solution was obtained instead.
+     * If the intended algorithm was implemented, the minimization problem would have obtained similar solutions.
      */
     private void markForLC100(LocalUser local) throws CustomException {
-
+        if (NUMBER_OF_TASKS != 10) {
+            throw new CustomException("LC100 requires NUMBER_OF_TASKS to be equal to 10!");
+        }
+        // Save variables for best solutions
         int[] best_locations = new int[10];
         double best_cost = Double.MAX_VALUE;
-
+        // Store locations to process each of the ten tasks.
         int[] i = new int[10];
-
+        // Begin brute force search for optimal solution
         for (i[0] = 0; i[0] < 2; i[0]++) {
             for (i[1] = 0; i[1] < 2; i[1]++) {
                 for (i[2] = 0; i[2] < 2; i[2]++) {
@@ -452,9 +461,13 @@ class Main {
                                                 for (int k = 0; k < tasks.size(); k++) {
                                                     tasks.get(k).mark(i[k] * 2);
                                                 }
+                                                // Temporarily resolve task
                                                 local.resolveTasks();
+                                                // Measure cost
                                                 double new_cost = calcCost();
+                                                // If new cost is better than old cost, this is the new optimal
                                                 if (new_cost < best_cost) {
+                                                    // Save new optimal solution
                                                     best_cost = new_cost;
                                                     best_locations = new int[]{i[0] * 2, i[1] * 2, i[2] * 2, i[3] * 2, i[4] * 2, i[5] * 2, i[6] * 2, i[7] * 2, i[8] * 2, i[9] * 2};
                                                 }
@@ -479,12 +492,15 @@ class Main {
      * This method runs a simulation using the LAC100 method described in the paper.
      */
     private void markForLAC100(LocalUser local) throws CustomException {
-
+        if (NUMBER_OF_TASKS != 10) {
+            throw new CustomException("LAC100 requires NUMBER_OF_TASKS to be equal to 10!");
+        }
+        // Save variables for best solutions
         int[] best_locations = new int[10];
         double best_cost = Double.MAX_VALUE;
-
+        // Store locations to process each of the ten tasks.
         int[] i = new int[10];
-
+        // Begin brute force search for optimal solution
         for (i[0] = 0; i[0] < 3; i[0]++) {
             for (i[1] = 0; i[1] < 3; i[1]++) {
                 for (i[2] = 0; i[2] < 3; i[2]++) {
@@ -499,9 +515,13 @@ class Main {
                                                 for (int k = 0; k < tasks.size(); k++) {
                                                     tasks.get(k).mark(i[k]);
                                                 }
+                                                // Temporarily resolve task
                                                 local.resolveTasks();
+                                                // Measure cost
                                                 double new_cost = calcCost();
+                                                // If new cost is better than old cost, this is the new optimal
                                                 if (new_cost < best_cost) {
+                                                    // Save new optimal solution
                                                     best_cost = new_cost;
                                                     best_locations = new int[]{i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7], i[8], i[9]};
                                                 }
@@ -526,6 +546,7 @@ class Main {
      * This method runs a simulation using the Random Mapping 100 method described in the paper.
      */
     private void markForRM100() throws CustomException {
+        // Randomly assign locations for each task as described in the paper.
         for (Task t : tasks) {
             if (Math.random() < 0.5) {
                 t.markL();

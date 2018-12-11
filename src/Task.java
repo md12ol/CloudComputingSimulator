@@ -180,6 +180,12 @@ class Task {
         compRC = true;
     }
 
+    /**
+     * This method marks a task to be processed at the location indicated by location.
+     *
+     * @param location 0: Local User, 1: Access Point, 2: Remote Cloud
+     * @throws CustomException Indicates program error
+     */
     void mark(int location) throws CustomException {
         if (arrived || calculated) {
             throw new CustomException("ERROR: Task being marked after arrival and/or calculation");
